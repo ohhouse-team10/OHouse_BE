@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Member extends Timestamped{
+public class Member extends Timestamp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
