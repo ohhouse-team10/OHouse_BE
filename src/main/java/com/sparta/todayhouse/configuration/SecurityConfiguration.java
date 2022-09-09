@@ -20,7 +20,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @ConditionalOnDefaultWebSecurity
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class SecurityConfiguration {
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -40,6 +39,7 @@ public class SecurityConfiguration {
 
                 .and()
                 .authorizeRequests()
+                .antMatchers("/test/**").permitAll()
                 .anyRequest().authenticated();
 
                 //CustomFilter 적용(ex. jwtFilter)
