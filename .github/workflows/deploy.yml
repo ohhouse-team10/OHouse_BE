@@ -18,6 +18,8 @@ permissions:
 
 jobs:
   deploy:
+    # comment에 'deploy' 가 포함되면 실행함
+    if: contains(github.event.comment.body, 'deploy')
     name: Deploy
     runs-on: ubuntu-latest
     environment: production
