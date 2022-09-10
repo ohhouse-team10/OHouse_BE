@@ -1,7 +1,6 @@
 package com.sparta.todayhouse.shared;
 
 import com.sparta.todayhouse.entity.Member;
-import com.sparta.todayhouse.shared.Authority;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -34,7 +33,7 @@ public class UserDetailsImpl implements UserDetails{
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(Authority.ROLE_MEMBER.toString());
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(Role.USER.getKey());
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(authority);
         return authorities;

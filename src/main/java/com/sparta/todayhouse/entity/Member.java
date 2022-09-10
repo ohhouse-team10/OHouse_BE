@@ -1,5 +1,6 @@
 package com.sparta.todayhouse.entity;
 
+import com.sparta.todayhouse.shared.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,6 +21,9 @@ public class Member extends Timestamp {
 
     @Column(nullable = false)
     String email;
+
+    @Column(nullable = false)
+    Role role;
 
     @Column(nullable = false)
     String nickname;
