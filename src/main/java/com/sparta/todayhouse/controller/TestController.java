@@ -22,6 +22,6 @@ public class TestController {
 
     @RequestMapping(value = "/customtest", method = RequestMethod.GET)
     public String customTest(){
-        return "test 한번더";
+        return "gitignore test";
     }
 }
