@@ -28,10 +28,10 @@ public class Member extends Timestamp {
     private Role role;
 
     @Column(nullable = false)
-    private String nickname;
+    private String password;
 
     @Column(nullable = false)
-    private String password;
+    private String nickname;
 
     @Column(nullable = false)
     private String profile_image;
@@ -39,7 +39,6 @@ public class Member extends Timestamp {
     @Column(nullable = false)
     private String status_message;
 
-    @JoinColumn(name = "post_id", nullable = false)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Post> posts;

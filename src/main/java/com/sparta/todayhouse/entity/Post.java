@@ -1,6 +1,7 @@
 package com.sparta.todayhouse.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sparta.todayhouse.dto.request.PostRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,4 +29,8 @@ public class Post extends Timestamp{
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore
     private Member member;
+
+    public void update(PostRequestDto requestDto){
+        this.content = requestDto.getContent();
+    }
 }

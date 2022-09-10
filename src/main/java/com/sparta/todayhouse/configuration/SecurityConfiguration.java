@@ -41,6 +41,7 @@ public class SecurityConfiguration {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/test/**").permitAll()
+                .antMatchers("/post/**").permitAll()
                 .mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll() //Preflight Request 허용해주기
                 .anyRequest().authenticated();
 
