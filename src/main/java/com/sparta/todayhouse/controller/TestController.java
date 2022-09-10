@@ -23,6 +23,6 @@ public class TestController {
 
     @RequestMapping(value = "/customtest", method = RequestMethod.GET)
     public String customTest(){
-        return "";
+        return "test";
     }
 }
