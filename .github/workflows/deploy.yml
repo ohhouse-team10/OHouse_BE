@@ -20,7 +20,7 @@ jobs:
   deploy:
     # [SKIP]문구 있으면 배포 안함
     #if: !startsWith(github.event.head_commit.message, '[Skip]')
-    if: ${ !startsWith(github.event.head_commit.message, '[SKIP]') }
+    if: ${{ !startsWith(github.event.head_commit.message, '[SKIP]') }}
     name: Deploy
     runs-on: ubuntu-latest
     environment: production
