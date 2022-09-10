@@ -1,5 +1,6 @@
 package com.sparta.todayhouse.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.todayhouse.shared.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -17,27 +19,32 @@ import javax.persistence.*;
 public class Member extends Timestamp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @Column(nullable = false)
-    String email;
+    private String email;
 
     @Column(nullable = false)
-    Role role;
+    private Role role;
 
     @Column(nullable = false)
-    String nickname;
+    private String nickname;
 
     @Column(nullable = false)
-    String password;
+    private String password;
 
     @Column(nullable = false)
-    String profile_image;
+    private String profile_image;
 
     @Column(nullable = false)
-    String status_message;
+    private String status_message;
 
-    public boolean validatePassword(PasswordEncoder passswordEncoder, String password){
+    @JoinColumn(name = "post_id", nullable = false)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<Post> posts;
+
+    public boolean validatePassword(PasswordEncoder passswordEncoder, String password) {
         return passswordEncoder.matches(password, this.password);
     }
 }
