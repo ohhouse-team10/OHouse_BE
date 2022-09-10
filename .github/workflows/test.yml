@@ -9,6 +9,8 @@ on:
 # 리전, 버킷 이름, CodeDeploy 앱 이름, CodeDeploy 배포 그룹 이름
 jobs:
   test: 
+    # comment에 'run test' 가 포함되면 실행함
+    if: contains(github.event.comment.body, 'run test')
     runs-on: ubuntu-latest 
     steps:
     # (1) 기본 체크아웃
