@@ -1,5 +1,7 @@
 package com.sparta.todayhouse.configuration;
 
+import com.sparta.todayhouse.jwt.JwtFilter;
+import com.sparta.todayhouse.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.security.ConditionalOnDefaultWebSecurity;
@@ -14,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -21,6 +24,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @ConditionalOnDefaultWebSecurity
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class SecurityConfiguration {
+
+    private final JwtUtil jwtUtil;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -43,12 +49,12 @@ public class SecurityConfiguration {
                 .antMatchers("/test/**").permitAll()
                 .antMatchers("/post/**").permitAll()
                 .mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll() //Preflight Request 허용해주기
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
 
                 //CustomFilter 적용(ex. jwtFilter)
-//                .and()
+                .and()
 //                .addFilterBefore()
-//                .addFilterAfter();
+                .addFilterAfter(new JwtFilter(jwtUtil), LogoutFilter.class);
 
         return http.build();
     }
