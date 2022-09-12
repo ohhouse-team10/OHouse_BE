@@ -1,5 +1,6 @@
 package com.sparta.todayhouse.service;
 
+import com.sparta.todayhouse.dto.ResponseMessage;
 import com.sparta.todayhouse.dto.request.PostRequestDto;
 import com.sparta.todayhouse.entity.Member;
 import com.sparta.todayhouse.entity.Post;
@@ -9,6 +10,8 @@ import org.springframework.security.web.authentication.rememberme.AbstractRememb
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.sparta.todayhouse.shared.ErrorCode.POST_NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
 public class PostService {
@@ -17,12 +20,15 @@ public class PostService {
     private final TestService testService;
 
     @Transactional(readOnly = true)
-    public Post isPresentPost(Long id) {
-        return postRepository.findById(id).orElse(null);
+    public ResponseMessage<?> isPresentPost(Long id) {
+        Post post = postRepository.findById(id).orElse(null);
+        if(null == post) return ResponseMessage.fail(POST_NOT_FOUND);
+
+        return ResponseMessage.success(post);
     }
 
     @Transactional
-    public Post createPost(PostRequestDto requestDto) {
+    public ResponseMessage<?> createPost(PostRequestDto requestDto) {
         Member member = testService.isPresentMember("admin@gmail.com");
 
         Post post = postRepository.save(Post.builder()
@@ -30,31 +36,33 @@ public class PostService {
                 .thumbnail("")
                 .member(member)
                 .build());
-        return post;
+        return ResponseMessage.success(post);
     }
 
     @Transactional(readOnly = true)
-    public Post getPost(Long id) {
+    public ResponseMessage<?> getPost(Long id) {
         return isPresentPost(id);
     }
 
     @Transactional
-    public Post updatePost(Long id, PostRequestDto requestDto) {
-        Post post = isPresentPost(id);
-        if (null == post) return post;
+    public ResponseMessage<?> updatePost(Long id, PostRequestDto requestDto) {
+        ResponseMessage<?> response = isPresentPost(id);
+        Post post = (Post)response.getData();
+        if (null == post) return response;
 
         post.update(requestDto);
 
-        return post;
+        return ResponseMessage.success(post);
     }
 
     @Transactional
-    public Long deletePost(Long id) {
-        Post post = isPresentPost(id);
-        if (null == post) return null;
+    public ResponseMessage<?> deletePost(Long id) {
+        ResponseMessage<?> response = isPresentPost(id);
+        Post post = (Post)response.getData();
+        if (null == post) return response;
 
         postRepository.delete(post);
 
-        return id;
+        return ResponseMessage.success("success");
     }
 }
