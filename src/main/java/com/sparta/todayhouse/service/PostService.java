@@ -2,6 +2,7 @@ package com.sparta.todayhouse.service;
 
 import com.sparta.todayhouse.dto.ResponseMessage;
 import com.sparta.todayhouse.dto.request.PostRequestDto;
+import com.sparta.todayhouse.dto.response.PostResponseDto;
 import com.sparta.todayhouse.entity.Member;
 import com.sparta.todayhouse.entity.Post;
 import com.sparta.todayhouse.repository.PostRepository;
@@ -14,7 +15,10 @@ import org.springframework.security.web.authentication.rememberme.AbstractRememb
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.sparta.todayhouse.shared.ErrorCode.POST_NOT_FOUND;
 
@@ -57,9 +61,33 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public ResponseMessage<?> getPostPerPage(Pageable pageable){
-        Page<Post> posts = postRepository.findAll(pageable);
+        Page<Post> postPage = postRepository.findAll(pageable);
 
-        return ResponseMessage.success(posts);
+        List<Post> postList = postPage.getContent();
+        List<PostResponseDto> responseList = new ArrayList<>();
+
+        for(Post post : postList){
+            Member member = post.getMember();
+            responseList.add(PostResponseDto.builder()
+                    .post_id(post.getId())
+                    .profile_image(member.getProfile_image())
+                    .nickname(member.getNickname())
+                    .isFollow(false)
+                    .statusMessage(member.getStatus_message())
+                    .thumbnail(post.getThumbnail())
+                    .isLike(false)
+                    .like_num(0)
+                    .comment_num(0)
+                    .content(post.getContent())
+                    .build());
+        }
+
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("content", responseList);
+        responseMap.put("last", postPage.isLast());
+        responseMap.put("totalPages", postPage.getTotalPages());
+
+        return ResponseMessage.success(responseMap);
     }
 
    // @Transactional(readOnly = true)
