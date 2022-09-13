@@ -44,13 +44,13 @@ public class PostController {
     @RequestMapping(value = "/auth/post/{post_id}", method = RequestMethod.PUT)
     public ResponseEntity<?> updatePost(@PathVariable Long post_id, @RequestBody PostRequestDto requestDto,
                            @AuthenticationPrincipal UserDetailsImpl userDetails){
-        ResponseMessage<?> data = postService.updatePost(post_id, requestDto);
+        ResponseMessage<?> data = postService.updatePost(post_id, requestDto, userDetails);
         return ResponseEntity.ok().body(data);
     }
 
     @RequestMapping(value = "/auth/post/{post_id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deletePost(@PathVariable Long post_id, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        ResponseMessage<?> data = postService.deletePost(post_id);
+        ResponseMessage<?> data = postService.deletePost(post_id, userDetails);
         return ResponseEntity.ok().body(data);
     }
 }

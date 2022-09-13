@@ -10,8 +10,6 @@ import com.sparta.todayhouse.shared.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.web.authentication.rememberme.AbstractRememberMeServices;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,14 +18,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.sparta.todayhouse.shared.ErrorCode.NOT_AUTHORIZED;
 import static com.sparta.todayhouse.shared.ErrorCode.POST_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
-
-    private final MemberService memberService;
 
     @Transactional(readOnly = true)
     public ResponseMessage<?> isPresentPost(Long id) {
@@ -39,14 +36,12 @@ public class PostService {
 
     @Transactional
     public ResponseMessage<?> createPost(PostRequestDto requestDto, UserDetailsImpl userDetails) {
-        UserDetailsImpl user = userDetails;
-
         Member member = userDetails.getMember();
-        //memberService.isPresentMember(member.getEmail());
 
         Post post = postRepository.save(Post.builder()
                 .content(requestDto.getContent())
                 .thumbnail("")
+                .views(0)
                 .member(member)
                 .build());
         return ResponseMessage.success(post);
@@ -55,8 +50,25 @@ public class PostService {
     @Transactional(readOnly = true)
     public ResponseMessage<?> getAllPost(){
         List<Post> posts = postRepository.findAll();
+        List<PostResponseDto> responseList = new ArrayList<>();
 
-        return ResponseMessage.success(posts);
+        for(Post post : posts){
+            Member member = post.getMember();
+            responseList.add(PostResponseDto.builder()
+                    .post_id(post.getId())
+                    .profile_image(member.getProfile_image())
+                    .nickname(member.getNickname())
+                    .isFollow(false)
+                    .statusMessage(member.getStatus_message())
+                    .thumbnail(post.getThumbnail())
+                    .isLike(false)
+                    .like_num(0)
+                    .comment_num(0)
+                    .content(post.getContent())
+                    .build());
+        }
+
+        return ResponseMessage.success(responseList);
     }
 
     @Transactional(readOnly = true)
@@ -96,24 +108,29 @@ public class PostService {
     }
 
     @Transactional
-    public ResponseMessage<?> updatePost(Long id, PostRequestDto requestDto) {
+    public ResponseMessage<?> updatePost(Long id, PostRequestDto requestDto,
+                                         UserDetailsImpl userDetails) {
         ResponseMessage<?> response = isPresentPost(id);
+        if(!response.getIsSuccess()) return response;
+
         Post post = (Post)response.getData();
-        if (null == post) return response;
+        Member member = userDetails.getMember();
+        if(!member.equals(post.getMember())) return ResponseMessage.fail(NOT_AUTHORIZED);
 
         post.update(requestDto);
-
-        return ResponseMessage.success(post);
+        return ResponseMessage.success("update success");
     }
 
     @Transactional
-    public ResponseMessage<?> deletePost(Long id) {
+    public ResponseMessage<?> deletePost(Long id, UserDetailsImpl userDetails) {
         ResponseMessage<?> response = isPresentPost(id);
+        if(!response.getIsSuccess()) return response;
+
         Post post = (Post)response.getData();
-        if (null == post) return response;
+        Member member = userDetails.getMember();
+        if(!member.equals(post.getMember())) return ResponseMessage.fail(NOT_AUTHORIZED);
 
         postRepository.delete(post);
-
-        return ResponseMessage.success("success");
+        return ResponseMessage.success("delete success");
     }
 }
