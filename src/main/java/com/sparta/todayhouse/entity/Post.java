@@ -23,6 +23,9 @@ public class Post extends Timestamp{
     private String thumbnail;
 
     @Column(nullable = false)
+    private int views;
+
+    @Column(nullable = false)
     private String content;
 
     @JoinColumn(name = "member_id", nullable = false)
@@ -33,4 +36,6 @@ public class Post extends Timestamp{
     public void update(PostRequestDto requestDto){
         this.content = requestDto.getContent();
     }
+
+    public void plusViews() { views++; }
 }

@@ -41,6 +41,7 @@ public class PostService {
         Post post = postRepository.save(Post.builder()
                 .content(requestDto.getContent())
                 .thumbnail("")
+                .views(0)
                 .member(member)
                 .build());
         return ResponseMessage.success(post);
