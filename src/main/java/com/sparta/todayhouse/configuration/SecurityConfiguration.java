@@ -48,13 +48,15 @@ public class SecurityConfiguration {
                 .authorizeRequests()
                 .antMatchers("/test/**").permitAll()
                 .antMatchers("/post/**").permitAll()
-                .mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll() //Preflight Request 허용해주기
+                .antMatchers("/member/**").permitAll()
+
+//                .mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll() //Preflight Request 허용해주기
                 .anyRequest().authenticated()
 
                 //CustomFilter 적용(ex. jwtFilter)
                 .and()
-//                .addFilterBefore()
-                .addFilterAfter(new JwtFilter(jwtUtil), LogoutFilter.class);
+////                .addFilterBefore()
+                .addFilterAfter(new JwtFilter(jwtUtil), LogoutFilter.class);      //진경님한테 질문
 
         return http.build();
     }

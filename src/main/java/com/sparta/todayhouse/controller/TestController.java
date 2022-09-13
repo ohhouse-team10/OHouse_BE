@@ -1,10 +1,9 @@
 package com.sparta.todayhouse.controller;
 
-import com.sparta.todayhouse.dto.request.MemberRequestDto;
+import com.sparta.todayhouse.dto.request.SignupRequestDto;
 import com.sparta.todayhouse.entity.Member;
 import com.sparta.todayhouse.service.TestService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.web.authentication.rememberme.AbstractRememberMeServices;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,7 +28,7 @@ public class TestController {
     public String testDelete() { return "success_delete!"; }
 
     @RequestMapping(value = "/customtest", method = RequestMethod.POST)
-    public Member customTest(@RequestBody MemberRequestDto requestDto){
+    public Member customTest(@RequestBody SignupRequestDto requestDto){
         return testService.createAdmin(requestDto);
     }
 }

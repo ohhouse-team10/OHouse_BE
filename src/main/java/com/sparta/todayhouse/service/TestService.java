@@ -1,9 +1,7 @@
 package com.sparta.todayhouse.service;
 
-import com.sparta.todayhouse.dto.request.MemberRequestDto;
-import com.sparta.todayhouse.dto.request.PostRequestDto;
+import com.sparta.todayhouse.dto.request.SignupRequestDto;
 import com.sparta.todayhouse.entity.Member;
-import com.sparta.todayhouse.entity.Post;
 import com.sparta.todayhouse.repository.MemberRepository;
 import com.sparta.todayhouse.shared.Role;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +22,7 @@ public class TestService {
     }
 
     @Transactional
-    public Member createAdmin(MemberRequestDto requestDto) {
+    public Member createAdmin(SignupRequestDto requestDto) {
         Member member = isPresentMember(requestDto.getEmail());
         if (null != member) return member;
 
