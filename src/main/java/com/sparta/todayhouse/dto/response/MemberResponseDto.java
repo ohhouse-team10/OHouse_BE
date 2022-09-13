@@ -18,5 +18,5 @@ public class MemberResponseDto {
     private String profile_image;
     private String status_message;
     private LocalDateTime createdAt;
-    private  LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;
 }

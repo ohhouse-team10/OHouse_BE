@@ -9,6 +9,10 @@ public enum ErrorCode {
     //에러x
     NULL("NO_ERROR", "NULL"),
 
+    //회원 관련 에러
+    DUPLICATE_EMAIL("DUPLICATE_EMAIL", "중복된 이메일입니다."),
+    MEMBER_NOT_FOUND("MEMBER_NOT_FOUND", "회원정보를 찾을 수 없습니다."),
+
     //POST(게시글) 관련 오류
     POST_NOT_FOUND("POST_NOT_FOUND", "게시글을 찾을 수 없습니다.");
 
