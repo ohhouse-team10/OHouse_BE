@@ -73,7 +73,7 @@ public class MemberService {
         }
 
         TokenDto tokenDto = jwtUtil.createAllToken(member.getEmail());
-        tokenToHeaders(tokenDto, response);
+        jwtUtil.tokenToHeaders(tokenDto, response);
 
         return ResponseMessage.success(LoginResponseDto.builder()
                 .nickname(member.getNickname())
@@ -102,10 +102,5 @@ public class MemberService {
     public Member isPresentMember(String email) {
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
         return optionalMember.orElse(null);
-    }
-
-    public void tokenToHeaders(TokenDto tokenDto, HttpServletResponse response) {
-        response.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
-        response.addHeader("Refresh-Token", tokenDto.getRefreshToken());
     }
 }

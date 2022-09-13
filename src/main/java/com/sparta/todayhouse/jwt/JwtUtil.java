@@ -12,9 +12,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
+import javax.accessibility.AccessibleKeyBinding;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
@@ -26,8 +29,9 @@ public class JwtUtil {
 
     private final UserDetailsServiceImpl userDetailsServiceImpl;
 
-    public static final String ACCESSKEY = "accessToken";
-    public static final String REFRESHKEY = "refreshToken";
+    private static final String BEARER_PREFIX = "Bearer ";
+    private static final String ACCESSKEY = "Authorization";
+    private static final String REFRESHKEY = "refreshToken";
     private static final Long ACCESS_TOKEN_TIME = 60 * 60 *1000L;
     private static final Long REFRESH_TOKEN_TIME = 3 * 60 * 60 *1000L; // 3시간
 
@@ -83,10 +87,29 @@ public class JwtUtil {
     }
 
     public String getTokenFromHeader(HttpServletRequest request, String type){
-        return type.equals("Access") ? request.getHeader(ACCESSKEY) : request.getHeader(REFRESHKEY);
+        switch(type){
+            case "Access":
+                String bearerToken = request.getHeader(ACCESSKEY);
+                if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
+                    return bearerToken.substring(7);
+                }
+                else return null;
+
+            case "Refresh":
+                return request.getHeader(REFRESHKEY);
+
+            default:
+                return null;
+        }
     }
+
     public String getEmailFromToken(String token){
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getSubject();
+    }
+
+    public void tokenToHeaders(TokenDto tokenDto, HttpServletResponse response) {
+        response.addHeader(ACCESSKEY, BEARER_PREFIX + tokenDto.getAccessToken());
+        response.addHeader(REFRESHKEY, tokenDto.getRefreshToken());
     }
 
 }
