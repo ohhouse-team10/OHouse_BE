@@ -50,7 +50,7 @@ public class SecurityConfiguration {
                 .antMatchers("/post/**").permitAll()
                 .antMatchers("/member/**").permitAll()
 
-//                .mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll() //Preflight Request 허용해주기
+                .mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll() //Preflight Request 허용해주기
                 .anyRequest().authenticated()
 
                 //CustomFilter 적용(ex. jwtFilter)
