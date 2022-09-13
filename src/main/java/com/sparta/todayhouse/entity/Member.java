@@ -24,7 +24,6 @@ public class Member extends Timestamp {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
     private Role role;
 
     @Column(nullable = false)
@@ -33,10 +32,8 @@ public class Member extends Timestamp {
     @Column(nullable = false)
     private String nickname;
 
-    @Column(nullable = false)
     private String profile_image;
 
-    @Column(nullable = false)
     private String status_message;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.REMOVE)

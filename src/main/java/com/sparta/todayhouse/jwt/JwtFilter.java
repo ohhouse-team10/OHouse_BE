@@ -23,7 +23,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String refreshToken = jwtUtil.getTokenFromHeader(request, "Refresh");
 
         if(accessToken == null){
-            return;
+
         }else {
             if(jwtUtil.tokenValidate(accessToken)){
                 String email = jwtUtil.getEmailFromToken(accessToken);
@@ -31,7 +31,6 @@ public class JwtFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);   //저장
                 }
             else{
-                return;
 
 
             }
