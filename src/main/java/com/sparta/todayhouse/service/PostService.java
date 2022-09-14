@@ -154,14 +154,11 @@ public class PostService {
         return ResponseMessage.success(responseMap);
     }
 
-   // @Transactional(readOnly = true)
-    public ResponseMessage<?> getPost(Long id) {
-        return isPresentPost(id);
-    }
-
     @Transactional
     public ResponseMessage<?> updatePost(Long id, PostRequestDto requestDto,
+                                         MultipartFile multipartFile,
                                          UserDetailsImpl userDetails) {
+        //이미지 삭제 기능도 추가
         ResponseMessage<?> data = isPresentPost(id);
         if(!data.getIsSuccess()) return data;
 
@@ -169,7 +166,14 @@ public class PostService {
         Member member = userDetails.getMember();
         if(!member.equals(post.getMember())) return ResponseMessage.fail(NOT_AUTHORIZED);
 
-        post.update(requestDto);
+        if(null == multipartFile) post.update(requestDto);
+        else{
+            ResponseMessage<?> image_data = imageUploader.uploadFile(multipartFile);
+            if(!image_data.getIsSuccess()) return image_data;
+
+            post.update(requestDto, (String) image_data.getData());
+        }
+
         return ResponseMessage.success("update success");
     }
 

@@ -34,8 +34,9 @@ public class PostController {
 
 
     @RequestMapping(value = "/post", method = RequestMethod.GET)                     //이중맵핑, 클래스매핑
-    public ResponseEntity<?> getPostPerPage(Pageable pageable){
-        ResponseMessage<?> data = postService.getPostPerPage(pageable);
+    public ResponseEntity<?> getPostPerPage(Pageable pageable, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        ResponseMessage<?> data = (null == userDetails) ? postService.getPostPerPage(pageable) :
+                postService.getPostPerPage(pageable, userDetails);
         return ResponseEntity.ok().body(data);
     }
 
@@ -46,9 +47,11 @@ public class PostController {
     }
 
     @RequestMapping(value = "/auth/post/{post_id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> updatePost(@PathVariable Long post_id, @RequestBody PostRequestDto requestDto,
-                           @AuthenticationPrincipal UserDetailsImpl userDetails){
-        ResponseMessage<?> data = postService.updatePost(post_id, requestDto, userDetails);
+    public ResponseEntity<?> updatePost(@PathVariable Long post_id,
+                                        @RequestPart(value = "data") PostRequestDto requestDto,
+                                        @RequestPart(value = "file", required = false) MultipartFile multipartFile,
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        ResponseMessage<?> data = postService.updatePost(post_id, requestDto, multipartFile, userDetails);
         return ResponseEntity.ok().body(data);
     }
 
