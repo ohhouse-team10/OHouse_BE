@@ -15,10 +15,13 @@ public enum ErrorCode {
     TOKEN_NOT_FOUND("TOKEN_NOT_FOUND", "토큰을 찾을 수 없습니다."),
     INVALID_TOKEN("INVALID_TOKEN","사용자 토큰이 유효하지 않습니다."),
 
-    //POST(게시글) 관련 오류
+    //Post(게시글) 관련 오류
     POST_NOT_FOUND("POST_NOT_FOUND", "게시글을 찾을 수 없습니다."),
 
-    //권한(토큰) 관련 오류
+    //Comment(댓글) 관련 오류
+    COMMENT_NOT_FOUND("COMMENT_NOT_FOUND", "댓글을 찾을 수 없습니다."),
+
+    //권한 관련 오류
     NOT_AUTHORIZED("NOT_AUTHORIZED", "권한이 없습니다.");
 
 //    //로그인(토큰) 관련 오류

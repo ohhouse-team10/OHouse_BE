@@ -38,13 +38,15 @@ public class PostService {
     public ResponseMessage<?> createPost(PostRequestDto requestDto, UserDetailsImpl userDetails) {
         Member member = userDetails.getMember();
 
-        Post post = postRepository.save(Post.builder()
+        Post post = Post.builder()
                 .content(requestDto.getContent())
                 .thumbnail("")
                 .views(0)
                 .member(member)
-                .build());
-        return ResponseMessage.success(post);
+                .build();
+        postRepository.save(post);
+
+        return ResponseMessage.success("post success");
     }
 
     @Transactional(readOnly = true)
@@ -110,10 +112,10 @@ public class PostService {
     @Transactional
     public ResponseMessage<?> updatePost(Long id, PostRequestDto requestDto,
                                          UserDetailsImpl userDetails) {
-        ResponseMessage<?> response = isPresentPost(id);
-        if(!response.getIsSuccess()) return response;
+        ResponseMessage<?> data = isPresentPost(id);
+        if(!data.getIsSuccess()) return data;
 
-        Post post = (Post)response.getData();
+        Post post = (Post)data.getData();
         Member member = userDetails.getMember();
         if(!member.equals(post.getMember())) return ResponseMessage.fail(NOT_AUTHORIZED);
 
