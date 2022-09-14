@@ -2,6 +2,7 @@ package com.sparta.todayhouse.controller;
 
 import com.sparta.todayhouse.dto.ResponseMessage;
 import com.sparta.todayhouse.dto.request.LoginRequestDto;
+import com.sparta.todayhouse.dto.request.MemberRequestDto;
 import com.sparta.todayhouse.dto.request.SignupRequestDto;
 import com.sparta.todayhouse.service.MemberService;
 import com.sparta.todayhouse.shared.UserDetailsImpl;
@@ -39,11 +40,17 @@ public class MemberController {
     }
 
 
-
-
     //회원정보수정
-    //회원탈퇴
+    @RequestMapping(value ="/auth/member/update", method = RequestMethod.PUT)
+    public ResponseEntity<?> updateMember(@RequestBody MemberRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        ResponseMessage<?> data = memberService.updateMember(requestDto, userDetails);
+        return ResponseEntity.ok().body(data);
+
+    }
+}
+
+
     //회원정보요청
 
 
-}
+

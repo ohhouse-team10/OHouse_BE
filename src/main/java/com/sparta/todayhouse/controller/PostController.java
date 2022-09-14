@@ -30,12 +30,10 @@ public class PostController {
         return ResponseEntity.ok().body(data);
     }
 
-    @RequestMapping(value = "/post", method = RequestMethod.GET)
-    public ResponseEntity<?> getPostPerPage(Pageable pageable, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        ResponseMessage<?> data;
-        data = (null == userDetails) ? postService.getPostPerPage(pageable) :
-                postService.getPostPerPage(pageable, userDetails);
-        
+
+    @RequestMapping(value = "/post", method = RequestMethod.GET)                     //이중맵핑, 클래스매핑
+    public ResponseEntity<?> getPostPerPage(Pageable pageable){
+        ResponseMessage<?> data = postService.getPostPerPage(pageable);
         return ResponseEntity.ok().body(data);
     }
 

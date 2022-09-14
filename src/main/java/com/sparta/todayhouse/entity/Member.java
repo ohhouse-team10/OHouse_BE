@@ -1,6 +1,7 @@
 package com.sparta.todayhouse.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sparta.todayhouse.dto.request.MemberRequestDto;
 import com.sparta.todayhouse.shared.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -62,4 +63,11 @@ public class Member extends Timestamp {
     public boolean validatePassword(PasswordEncoder passswordEncoder, String password) {
         return passswordEncoder.matches(password, this.password);
     }
+
+    public void updateMember(MemberRequestDto requestDto){            //jpa 영속성
+        this.nickname = requestDto.getNickname();
+        this.profile_image = requestDto.getProfile_image();
+        this.status_message = requestDto.getStatus_message();
+    }
+
 }

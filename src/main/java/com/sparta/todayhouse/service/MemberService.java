@@ -2,6 +2,7 @@ package com.sparta.todayhouse.service;
 
 import com.sparta.todayhouse.dto.ResponseMessage;
 import com.sparta.todayhouse.dto.request.LoginRequestDto;
+import com.sparta.todayhouse.dto.request.MemberRequestDto;
 import com.sparta.todayhouse.dto.request.SignupRequestDto;
 import com.sparta.todayhouse.dto.response.LoginResponseDto;
 import com.sparta.todayhouse.entity.Member;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
@@ -25,7 +27,7 @@ import static com.sparta.todayhouse.shared.ErrorCode.*;
 @Service
 public class MemberService {
 
-    private final MemberRepository memberRepository;
+    private final MemberRepository memberRepository;      //
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
 
@@ -94,11 +96,19 @@ public class MemberService {
     }
 
 
+    //회원정보수정    memberrequestdto로 받아서
+    @Transactional
+    public ResponseMessage<?> updateMember(MemberRequestDto requestDto, UserDetailsImpl userDetails){
 
-    //로그인할 때 생성된 리프레쉬 토큰을 레포지토리에 저장 - 레포지토리에서 찾아서 없애기
+        Member member = userDetails.getMember();
+        member.updateMember(requestDto);
+        memberRepository.save(member);
+        return ResponseMessage.success("edit success");
+    }
 
 
-    //회원정보수정
+
+
     //회원탈퇴
     //회원정보요청
 }
