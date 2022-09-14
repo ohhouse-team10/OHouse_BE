@@ -41,8 +41,9 @@ public class PostController {
     }
 
     @RequestMapping(value = "/post/{post_id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getPost(@PathVariable Long post_id, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        ResponseMessage<?> data = postService.isPresentPost(post_id);
+    public ResponseEntity<?> getPostDetail(@PathVariable Long post_id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        ResponseMessage<?> data = (null == userDetails) ? postService.getPostDetail(post_id) :
+                postService.getPostDetail(post_id, userDetails);
         return ResponseEntity.ok().body(data);
     }
 

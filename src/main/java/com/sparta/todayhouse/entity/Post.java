@@ -27,6 +27,12 @@ public class Post extends Timestamp{
     private int views;
 
     @Column(nullable = false)
+    private String style;
+
+    @Column(nullable = false)
+    private String type;
+
+    @Column(nullable = false)
     private String content;
 
     @JoinColumn(name = "member_id", nullable = false)
@@ -42,13 +48,11 @@ public class Post extends Timestamp{
     @JsonIgnore
     private List<Likes> likes;
 
-    public void update(PostRequestDto requestDto){
+    public void update(PostRequestDto requestDto, String... imageUrl){
         this.content = requestDto.getContent();
-    }
-
-    public void update(PostRequestDto requestDto, String imageUrl){
-        this.content = requestDto.getContent();
-        this.thumbnail = imageUrl;
+        this.style = requestDto.getStyle();
+        this.type = requestDto.getType();
+        this.thumbnail = imageUrl.length > 0 ? imageUrl[0] : this.thumbnail;
     }
 
     @Override

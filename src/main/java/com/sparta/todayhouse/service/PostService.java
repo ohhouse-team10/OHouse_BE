@@ -2,6 +2,7 @@ package com.sparta.todayhouse.service;
 
 import com.sparta.todayhouse.dto.ResponseMessage;
 import com.sparta.todayhouse.dto.request.PostRequestDto;
+import com.sparta.todayhouse.dto.response.PostDetailResponseDto;
 import com.sparta.todayhouse.dto.response.PostResponseDto;
 import com.sparta.todayhouse.entity.Likes;
 import com.sparta.todayhouse.entity.Member;
@@ -50,36 +51,14 @@ public class PostService {
                 .content(requestDto.getContent())
                 .thumbnail(imageUrl)
                 .views(0)
+                .style(requestDto.getStyle())
+                .type(requestDto.getType())
                 .member(member)
                 .build();
         postRepository.save(post);
 
         return ResponseMessage.success("post success");
     }
-
-//    @Transactional(readOnly = true)
-//    public ResponseMessage<?> getAllPost(){
-//        List<Post> posts = postRepository.findAll();
-//        List<PostResponseDto> responseList = new ArrayList<>();
-//
-//        for(Post post : posts){
-//            Member member = post.getMember();
-//            responseList.add(PostResponseDto.builder()
-//                    .post_id(post.getId())
-//                    .profile_image(member.getProfile_image())
-//                    .nickname(member.getNickname())
-//                    .isFollow(false)
-//                    .statusMessage(member.getStatus_message())
-//                    .thumbnail(post.getThumbnail())
-//                    .isLike(false)
-//                    .like_num(0)
-//                    .comment_num(0)
-//                    .content(post.getContent())
-//                    .build());
-//        }
-//
-//        return ResponseMessage.success(responseList);
-//    }
 
     @Transactional(readOnly = true)
     public ResponseMessage<?> getPostPerPage(Pageable pageable){
@@ -154,11 +133,63 @@ public class PostService {
         return ResponseMessage.success(responseMap);
     }
 
+    @Transactional(readOnly = true)
+    public ResponseMessage<?> getPostDetail(Long id) {
+        ResponseMessage<?> post_data = isPresentPost(id);
+        if (!post_data.getIsSuccess()) return post_data;
+
+        Post post = (Post) post_data.getData();
+        Member member = post.getMember();
+        return ResponseMessage.success(PostDetailResponseDto.builder()
+                .style(post.getStyle())
+                .type(post.getType())
+                .thumbnail(post.getThumbnail())
+                .content(post.getContent())
+                .profile_image(member.getProfile_image())
+                .nickname(member.getNickname())
+                .isFollow(false)
+                .isLike(false)
+                .like_num(post.getLikes().size())
+                .isEditable(false)
+                .build());
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseMessage<?> getPostDetail(Long id, UserDetailsImpl userDetails) {
+        ResponseMessage<?> post_data = isPresentPost(id);
+        if (!post_data.getIsSuccess()) return post_data;
+
+        Post post = (Post) post_data.getData();
+        Member post_member = post.getMember();
+        Member member = userDetails.getMember();
+
+        List<Likes> likesList = post.getLikes();
+        Boolean isLike = false;
+        for(Likes likes : likesList){
+            if(member.equals(likes.getMember())){
+                isLike = true;
+                break;
+            }
+        }
+
+        return ResponseMessage.success(PostDetailResponseDto.builder()
+                .style(post.getStyle())
+                .type(post.getType())
+                .thumbnail(post.getThumbnail())
+                .content(post.getContent())
+                .profile_image(post_member.getProfile_image())
+                .nickname(post_member.getNickname())
+                .isFollow(false)
+                .isLike(isLike)
+                .like_num(post.getLikes().size())
+                .isEditable(member.equals(post_member))
+                .build());
+    }
+
     @Transactional
     public ResponseMessage<?> updatePost(Long id, PostRequestDto requestDto,
                                          MultipartFile multipartFile,
                                          UserDetailsImpl userDetails) {
-        //이미지 삭제 기능도 추가
         ResponseMessage<?> data = isPresentPost(id);
         if(!data.getIsSuccess()) return data;
 
@@ -168,6 +199,7 @@ public class PostService {
 
         if(null == multipartFile) post.update(requestDto);
         else{
+            //이미지 삭제 기능도 추가
             ResponseMessage<?> image_data = imageUploader.uploadFile(multipartFile);
             if(!image_data.getIsSuccess()) return image_data;
 
