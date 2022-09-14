@@ -76,11 +76,12 @@ public class JwtUtil {                   // JWT를 생성,검증하는 역할
         return token;
     }
 
-    public void deleteToken(String email){
+    public Boolean deleteToken(String email){
         RefreshToken refreshToken =refreshTokenRepository.findByEmail(email).orElse(null);
-        if(refreshToken != null){
-            refreshTokenRepository.delete(refreshToken);
-        }
+        if(null == refreshToken) return false;
+
+        refreshTokenRepository.delete(refreshToken);
+        return true;
     }
 
 

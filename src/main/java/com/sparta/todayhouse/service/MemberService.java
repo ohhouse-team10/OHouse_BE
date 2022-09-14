@@ -4,13 +4,10 @@ import com.sparta.todayhouse.dto.ResponseMessage;
 import com.sparta.todayhouse.dto.request.LoginRequestDto;
 import com.sparta.todayhouse.dto.request.SignupRequestDto;
 import com.sparta.todayhouse.dto.response.LoginResponseDto;
-import com.sparta.todayhouse.dto.response.MemberResponseDto;
-import com.sparta.todayhouse.dto.response.ResponseDto;
 import com.sparta.todayhouse.entity.Member;
 import com.sparta.todayhouse.jwt.JwtUtil;
 import com.sparta.todayhouse.jwt.TokenDto;
 import com.sparta.todayhouse.repository.MemberRepository;
-import com.sparta.todayhouse.repository.RefreshTokenRepository;
 import com.sparta.todayhouse.shared.Role;
 import com.sparta.todayhouse.shared.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
@@ -83,9 +79,13 @@ public class MemberService {
     }
 
      //로그아웃
-    public ResponseMessage<?> logout(UserDetailsImpl userDetails){
-        jwtUtil.deleteToken(userDetails.getMember().getEmail());
-    return ResponseMessage.success("LOGOUT_SUCCESS");
+    @Transactional
+    public ResponseMessage<?> logout(UserDetailsImpl userDetails) {
+        if(jwtUtil.deleteToken(userDetails.getMember().getEmail())){
+            return ResponseMessage.success("logout success");
+        }
+
+        return ResponseMessage.fail(TOKEN_NOT_FOUND);
     }
 
 

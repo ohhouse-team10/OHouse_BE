@@ -3,8 +3,6 @@ package com.sparta.todayhouse.controller;
 import com.sparta.todayhouse.dto.ResponseMessage;
 import com.sparta.todayhouse.dto.request.LoginRequestDto;
 import com.sparta.todayhouse.dto.request.SignupRequestDto;
-import com.sparta.todayhouse.dto.response.MemberResponseDto;
-import com.sparta.todayhouse.dto.response.ResponseDto;
 import com.sparta.todayhouse.service.MemberService;
 import com.sparta.todayhouse.shared.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -34,9 +31,11 @@ public class MemberController {
         return ResponseEntity.ok().body(data);
     }
 
-    @RequestMapping(value ="/auth/member/logout", method = RequestMethod.GET)
-    public ResponseDto<?> logout(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        return memberService.logout(userDetails);
+    @RequestMapping(value ="/auth/member/logout", method = RequestMethod.DELETE)
+    public ResponseEntity<?> logout(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        ResponseMessage<?> data = memberService.logout(userDetails);
+
+        return ResponseEntity.ok().body(data);
     }
 
 

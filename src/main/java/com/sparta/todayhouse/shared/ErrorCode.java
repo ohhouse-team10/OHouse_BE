@@ -12,6 +12,7 @@ public enum ErrorCode {
     //로그인, 회원 가입 관련 에러
     DUPLICATE_EMAIL("DUPLICATE_EMAIL", "중복된 이메일입니다."),
     MEMBER_NOT_FOUND("MEMBER_NOT_FOUND", "회원정보를 찾을 수 없습니다."),
+    TOKEN_NOT_FOUND("TOKEN_NOT_FOUND", "토큰을 찾을 수 없습니다."),
     INVALID_TOKEN("INVALID_TOKEN","사용자 토큰이 유효하지 않습니다."),
 
     //POST(게시글) 관련 오류
