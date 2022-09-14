@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -32,6 +33,10 @@ public class Post extends Timestamp{
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore
     private Member member;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<Comment> comments;
 
     public void update(PostRequestDto requestDto){
         this.content = requestDto.getContent();

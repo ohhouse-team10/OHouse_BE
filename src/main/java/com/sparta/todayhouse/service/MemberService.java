@@ -29,13 +29,19 @@ public class MemberService {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional(readOnly = true)
+    public ResponseMessage<?> isPresentMember(String email) {
+        Member member = memberRepository.findByEmail(email).orElse(null);
+        if(null == member) return ResponseMessage.fail(MEMBER_NOT_FOUND);
+
+        return ResponseMessage.success(member);
+    }
+
     //회원가입
     @Transactional
     public ResponseMessage<?> signup(SignupRequestDto requestDto){
-        Optional<Member> optionalMember = memberRepository.findByEmail(requestDto.getEmail());
-        if(optionalMember.isPresent()){
-            return ResponseMessage.fail(DUPLICATE_EMAIL);
-        }
+        ResponseMessage<?> data = isPresentMember(requestDto.getEmail());
+        if(data.getIsSuccess()) return ResponseMessage.fail(DUPLICATE_EMAIL);
 
         Member member = Member.builder()
                 .email(requestDto.getEmail())
@@ -61,10 +67,11 @@ public class MemberService {
     //로그인
     @Transactional
     public ResponseMessage<?> login(LoginRequestDto requestDto, HttpServletResponse response) {
-        Member member = isPresentMember(requestDto.getEmail());
-        if (null == member) {
-            return ResponseMessage.fail(MEMBER_NOT_FOUND);
-        }
+        ResponseMessage<?> data = isPresentMember(requestDto.getEmail());
+
+        if(!data.getIsSuccess()) return ResponseMessage.fail(MEMBER_NOT_FOUND);
+
+        Member member = (Member)data.getData();
         if (!member.validatePassword(passwordEncoder, requestDto.getPassword())) {
             return ResponseMessage.fail(MEMBER_NOT_FOUND);
         }
@@ -96,13 +103,4 @@ public class MemberService {
     //회원정보수정
     //회원탈퇴
     //회원정보요청
-
-
-    //메서드 추가
-    @Transactional(readOnly = true)
-    public Member isPresentMember(String email) {
-        Optional<Member> optionalMember = memberRepository.findByEmail(email);
-        return optionalMember.orElse(null);
-    }
-
 }

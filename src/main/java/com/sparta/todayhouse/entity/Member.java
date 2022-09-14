@@ -33,13 +33,25 @@ public class Member extends Timestamp {
     @Column(nullable = false)
     private String nickname;
 
+    @Column(nullable = false)
     private String profile_image;
 
+    @Column(nullable = false)
     private String status_message;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Post> posts;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<Comment> comments;
+
+    @Override
+    public boolean equals(Object obj) {
+        Member member = (Member) obj;
+        return this.id == member.getId();
+    }
 
     public boolean validatePassword(PasswordEncoder passswordEncoder, String password) {
         return passswordEncoder.matches(password, this.password);

@@ -16,7 +16,8 @@ public class PostController {
     private final PostService postService;
 
     @RequestMapping(value = "/auth/post", method = RequestMethod.POST)
-    public ResponseEntity<?> createPost(@RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<?> createPost(@RequestBody PostRequestDto requestDto,
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails){
 //        Member member = userDetails.getMember();
 //        if(null == member) return error;
         ResponseMessage<?> data = postService.createPost(requestDto, userDetails);
@@ -49,7 +50,8 @@ public class PostController {
     }
 
     @RequestMapping(value = "/auth/post/{post_id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deletePost(@PathVariable Long post_id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<?> deletePost(@PathVariable Long post_id,
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails){
         ResponseMessage<?> data = postService.deletePost(post_id, userDetails);
         return ResponseEntity.ok().body(data);
     }
