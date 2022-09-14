@@ -26,7 +26,10 @@ public enum ErrorCode {
     LIKES_NOT_FOUND("FAVORITE_NOT_FOUND", "아직 좋아요를 누르지 않았습니다."),
 
     //권한 관련 오류
-    NOT_AUTHORIZED("NOT_AUTHORIZED", "권한이 없습니다.");
+    NOT_AUTHORIZED("NOT_AUTHORIZED", "권한이 없습니다."),
+
+    //이미지 업로드 관련 오류
+    FAIL_TO_UPLOAD("FAIL_TO_UPLOAD", "이미지 업로드에 실패하였습니다.");
 
 //    //로그인(토큰) 관련 오류
 //    NULL_TOKEN("NULL_TOKEN", "로그인이 필요합니다."),
