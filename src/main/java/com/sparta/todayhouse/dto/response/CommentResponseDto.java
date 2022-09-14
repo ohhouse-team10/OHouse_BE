@@ -14,6 +14,6 @@ public class CommentResponseDto {
     private String profile_image;
     private String nickname;
     private String content;
-    private LocalDateTime createdAt;
+    private String createdAt;
     private Boolean isEditable;
 }

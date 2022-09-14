@@ -7,6 +7,7 @@ import com.sparta.todayhouse.entity.Comment;
 import com.sparta.todayhouse.entity.Member;
 import com.sparta.todayhouse.entity.Post;
 import com.sparta.todayhouse.repository.CommentRepository;
+import com.sparta.todayhouse.shared.PublicMethod;
 import com.sparta.todayhouse.shared.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -65,7 +66,7 @@ public class CommentService {
                     .profile_image(member.getProfile_image())
                     .nickname(member.getNickname())
                     .content(comment.getContent())
-                    .createdAt(comment.getCreatedAt())
+                    .createdAt(PublicMethod.rebaseTime(comment.getCreatedAt()))
                     .isEditable(false)
                     .build());
         }
@@ -94,7 +95,7 @@ public class CommentService {
                     .profile_image(commentMember.getProfile_image())
                     .nickname(commentMember.getNickname())
                     .content(comment.getContent())
-                    .createdAt(comment.getCreatedAt())
+                    .createdAt(PublicMethod.rebaseTime(comment.getCreatedAt()))
                     .isEditable(isEditable)
                     .build());
         }

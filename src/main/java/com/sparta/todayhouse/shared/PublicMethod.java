@@ -9,6 +9,6 @@ import java.time.format.DateTimeFormatter;
 public class PublicMethod {
 
     public static String rebaseTime(LocalDateTime time){
-        return time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        return time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd, HH:mm"));
     }
 }
