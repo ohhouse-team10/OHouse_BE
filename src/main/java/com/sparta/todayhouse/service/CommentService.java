@@ -83,7 +83,7 @@ public class CommentService {
         Post post = (Post) post_data.getData();
 
         List<CommentResponseDto> responseList = new ArrayList<>();
-        List<Comment> comments = post.getComments();
+        List<Comment> comments = commentRepository.findAllByPostOrderByCreatedAtDesc(post);
 
         for (Comment comment : comments) {
             Member commentMember = comment.getMember();
