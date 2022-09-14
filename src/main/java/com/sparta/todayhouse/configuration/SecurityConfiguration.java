@@ -1,5 +1,6 @@
 package com.sparta.todayhouse.configuration;
 
+import com.sparta.todayhouse.jwt.CustomAuthenticationEntryPoint;
 import com.sparta.todayhouse.jwt.JwtFilter;
 import com.sparta.todayhouse.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -40,8 +41,10 @@ public class SecurityConfiguration {
         http.csrf().disable()
 
                 //커스텀 예외처리
-                //.exceptionHandling()
+                .exceptionHandling()
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
 
+                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
                 .and()
