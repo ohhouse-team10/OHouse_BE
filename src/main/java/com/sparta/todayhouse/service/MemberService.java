@@ -74,7 +74,7 @@ public class MemberService {
         }
 
         TokenDto tokenDto = jwtUtil.createAllToken(member.getEmail());
-        tokenToHeaders(tokenDto, response);
+        jwtUtil.tokenToHeaders(tokenDto, response);
 
         return ResponseMessage.success(LoginResponseDto.builder()
                 .nickname(member.getNickname())
@@ -105,9 +105,4 @@ public class MemberService {
         return optionalMember.orElse(null);
     }
 
-    //util에서 토큰 생성 후,  filter에서 토큰 받아서 header에 추가해주는 기능
-    public void tokenToHeaders(TokenDto tokenDto, HttpServletResponse response) {
-        response.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
-        response.addHeader("Refresh-Token", tokenDto.getRefreshToken());
-    }
 }

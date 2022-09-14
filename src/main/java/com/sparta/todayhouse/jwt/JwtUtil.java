@@ -15,9 +15,12 @@ import org.springframework.expression.spel.ast.NullLiteral;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
+import javax.accessibility.AccessibleKeyBinding;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
@@ -30,8 +33,10 @@ public class JwtUtil {                   // JWT를 생성,검증하는 역할
     private final UserDetailsServiceImpl userDetailsServiceImpl;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    public static final String ACCESSTOKEN = "accessToken";
-    public static final String REFRESHTOKEN = "refreshToken";
+    private static final String BEARER_PREFIX = "Bearer ";
+    private static final String ACCESSKEY = "Authorization";
+    private static final String REFRESHKEY = "refreshToken";
+
     private static final Long ACCESS_TOKEN_TIME = 60 * 60 *1000L;
     private static final Long REFRESH_TOKEN_TIME = 3 * 60 * 60 *1000L; // 3시간
 
@@ -108,12 +113,30 @@ public class JwtUtil {                   // JWT를 생성,검증하는 역할
 
     //JwtFilter에서 사용
     public String getTokenFromHeader(HttpServletRequest request, String type){
-        return type.equals("Access") ? request.getHeader(ACCESSTOKEN) : request.getHeader(REFRESHTOKEN);
+
+        switch(type){
+            case "Access":
+                String bearerToken = request.getHeader(ACCESSKEY);
+                if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
+                    return bearerToken.substring(7);
+                }
+                else return null;
+
+            case "Refresh":
+                return request.getHeader(REFRESHKEY);
+
+            default:
+                return null;
+        }
     }
 
-    //email 가져오는 기능
     public String getEmailFromToken(String token){
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getSubject();
+    }
+
+    public void tokenToHeaders(TokenDto tokenDto, HttpServletResponse response) {
+        response.addHeader(ACCESSKEY, BEARER_PREFIX + tokenDto.getAccessToken());
+        response.addHeader(REFRESHKEY, tokenDto.getRefreshToken());
     }
 
 }
