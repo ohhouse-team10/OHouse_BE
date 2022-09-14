@@ -33,10 +33,8 @@ public class PostController {
     @RequestMapping(value = "/post", method = RequestMethod.GET)
     public ResponseEntity<?> getPostPerPage(Pageable pageable, @AuthenticationPrincipal UserDetailsImpl userDetails){
         ResponseMessage<?> data;
-        if(null == userDetails)
-            data = postService.getPostPerPage(pageable);
-        else
-            data = postService.getPostPerPage(pageable, userDetails);
+        data = (null == userDetails) ? postService.getPostPerPage(pageable) :
+                postService.getPostPerPage(pageable, userDetails);
         
         return ResponseEntity.ok().body(data);
     }
