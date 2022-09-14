@@ -53,6 +53,8 @@ public class Member extends Timestamp {
 
     @Override
     public boolean equals(Object obj) {
+        if(null == obj) return false;
+
         Member member = (Member) obj;
         return this.id == member.getId();
     }

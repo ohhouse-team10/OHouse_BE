@@ -31,8 +31,8 @@ public class PostController {
     }
 
     @RequestMapping(value = "/post", method = RequestMethod.GET)
-    public ResponseEntity<?> getPostPerPage(Pageable pageable){
-        ResponseMessage<?> data = postService.getPostPerPage(pageable);
+    public ResponseEntity<?> getPostPerPage(Pageable pageable, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        ResponseMessage<?> data = postService.getPostPerPage(pageable, userDetails);
         return ResponseEntity.ok().body(data);
     }
 
