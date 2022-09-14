@@ -49,6 +49,7 @@ public class SecurityConfiguration {
                 .antMatchers("/test/**").permitAll()
                 .antMatchers("/post/**").permitAll()
                 .antMatchers("/member/**").permitAll()
+                .antMatchers("/comment/**").permitAll()
 
                 .mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll() //Preflight Request 허용해주기
                 .anyRequest().authenticated()
