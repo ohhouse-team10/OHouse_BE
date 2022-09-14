@@ -3,6 +3,7 @@ package com.sparta.todayhouse.service;
 import com.sparta.todayhouse.dto.ResponseMessage;
 import com.sparta.todayhouse.dto.request.PostRequestDto;
 import com.sparta.todayhouse.dto.response.PostResponseDto;
+import com.sparta.todayhouse.entity.Likes;
 import com.sparta.todayhouse.entity.Member;
 import com.sparta.todayhouse.entity.Post;
 import com.sparta.todayhouse.repository.PostRepository;
@@ -87,7 +88,15 @@ public class PostService {
         for(Post post : postList){
             Member postMember = post.getMember();
             Boolean isLike = false;
-            if(postMember.equals(member)) isLike = true;
+            if(null != member){
+                List<Likes> likes = post.getLikes();
+                for(Likes like : likes){
+                    if(member.equals(like.getMember())) {
+                        isLike = true;
+                        break;
+                    }
+                }
+            }
 
             responseList.add(PostResponseDto.builder()
                     .post_id(post.getId())

@@ -46,5 +46,13 @@ public class Post extends Timestamp{
         this.content = requestDto.getContent();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(null == obj) return false;
+
+        Post post = (Post) obj;
+        return this.id == post.getId();
+    }
+
     public void plusViews() { views++; }
 }
