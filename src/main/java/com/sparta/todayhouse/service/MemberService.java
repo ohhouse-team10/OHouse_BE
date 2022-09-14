@@ -10,7 +10,9 @@ import com.sparta.todayhouse.entity.Member;
 import com.sparta.todayhouse.jwt.JwtUtil;
 import com.sparta.todayhouse.jwt.TokenDto;
 import com.sparta.todayhouse.repository.MemberRepository;
+import com.sparta.todayhouse.repository.RefreshTokenRepository;
 import com.sparta.todayhouse.shared.Role;
+import com.sparta.todayhouse.shared.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,8 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
-import static com.sparta.todayhouse.shared.ErrorCode.DUPLICATE_EMAIL;
-import static com.sparta.todayhouse.shared.ErrorCode.MEMBER_NOT_FOUND;
+import static com.sparta.todayhouse.shared.ErrorCode.*;
 
 
 @RequiredArgsConstructor
@@ -81,20 +82,20 @@ public class MemberService {
                 .build());
     }
 
-    // 로그아웃
-//    public ResponseDto<?> logout(HttpServletRequest request) {
-////        if (!tokenProvider.validateToken(request.getHeader("Refresh-Token"))) {
-////            return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
-////        }
-////        Member member = tokenProvider.getMemberFromAuthentication();
-//        if (null == member) {
-//            return ResponseDto.fail("MEMBER_NOT_FOUND",
-//                    "사용자를 찾을 수 없습니다.");
-//        }
-//
-//
-//        return jwtUtil.deleteRefreshToken(member);
-//    }
+     //로그아웃
+    public ResponseMessage<?> logout(UserDetailsImpl userDetails){
+        jwtUtil.deleteToken(userDetails.getMember().getEmail());
+    return ResponseMessage.success("LOGOUT_SUCCESS");
+    }
+
+
+
+    //로그인할 때 생성된 리프레쉬 토큰을 레포지토리에 저장 - 레포지토리에서 찾아서 없애기
+
+
+    //회원정보수정
+    //회원탈퇴
+    //회원정보요청
 
 
     //메서드 추가
@@ -104,6 +105,7 @@ public class MemberService {
         return optionalMember.orElse(null);
     }
 
+    //util에서 토큰 생성 후,  filter에서 토큰 받아서 header에 추가해주는 기능
     public void tokenToHeaders(TokenDto tokenDto, HttpServletResponse response) {
         response.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
         response.addHeader("Refresh-Token", tokenDto.getRefreshToken());
