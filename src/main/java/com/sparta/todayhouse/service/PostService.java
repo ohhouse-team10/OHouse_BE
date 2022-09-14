@@ -54,8 +54,10 @@ public class PostService {
         List<Post> posts = postRepository.findAll();
         List<PostResponseDto> responseList = new ArrayList<>();
 
+        Boolean isLike = true;
         for(Post post : posts){
             Member member = post.getMember();
+            isLike = !isLike;
             responseList.add(PostResponseDto.builder()
                     .post_id(post.getId())
                     .profile_image(member.getProfile_image())
@@ -63,7 +65,7 @@ public class PostService {
                     .isFollow(false)
                     .statusMessage(member.getStatus_message())
                     .thumbnail(post.getThumbnail())
-                    .isLike(false)
+                    .isLike(isLike)
                     .like_num(0)
                     .comment_num(0)
                     .content(post.getContent())
