@@ -13,19 +13,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.sparta.todayhouse.shared.ErrorCode.NOT_AUTHORIZED;
-import static com.sparta.todayhouse.shared.ErrorCode.POST_NOT_FOUND;
+import static com.sparta.todayhouse.shared.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final AwsS3Service imageUploader;
 
     @Transactional(readOnly = true)
     public ResponseMessage<?> isPresentPost(Long id) {
@@ -36,12 +37,18 @@ public class PostService {
     }
 
     @Transactional
-    public ResponseMessage<?> createPost(PostRequestDto requestDto, UserDetailsImpl userDetails) {
+    public ResponseMessage<?> createPost(PostRequestDto requestDto, MultipartFile multipartFile,
+                                         UserDetailsImpl userDetails) {
+        if(null == multipartFile) return ResponseMessage.fail(FILE_NOT_FOUND);
+        ResponseMessage<?> image_data = imageUploader.uploadFile(multipartFile);
+        if(!image_data.getIsSuccess()) return image_data;
+
         Member member = userDetails.getMember();
+        String imageUrl = (String) image_data.getData();
 
         Post post = Post.builder()
                 .content(requestDto.getContent())
-                .thumbnail("")
+                .thumbnail(imageUrl)
                 .views(0)
                 .member(member)
                 .build();
@@ -50,29 +57,29 @@ public class PostService {
         return ResponseMessage.success("post success");
     }
 
-    @Transactional(readOnly = true)
-    public ResponseMessage<?> getAllPost(){
-        List<Post> posts = postRepository.findAll();
-        List<PostResponseDto> responseList = new ArrayList<>();
-
-        for(Post post : posts){
-            Member member = post.getMember();
-            responseList.add(PostResponseDto.builder()
-                    .post_id(post.getId())
-                    .profile_image(member.getProfile_image())
-                    .nickname(member.getNickname())
-                    .isFollow(false)
-                    .statusMessage(member.getStatus_message())
-                    .thumbnail(post.getThumbnail())
-                    .isLike(false)
-                    .like_num(0)
-                    .comment_num(0)
-                    .content(post.getContent())
-                    .build());
-        }
-
-        return ResponseMessage.success(responseList);
-    }
+//    @Transactional(readOnly = true)
+//    public ResponseMessage<?> getAllPost(){
+//        List<Post> posts = postRepository.findAll();
+//        List<PostResponseDto> responseList = new ArrayList<>();
+//
+//        for(Post post : posts){
+//            Member member = post.getMember();
+//            responseList.add(PostResponseDto.builder()
+//                    .post_id(post.getId())
+//                    .profile_image(member.getProfile_image())
+//                    .nickname(member.getNickname())
+//                    .isFollow(false)
+//                    .statusMessage(member.getStatus_message())
+//                    .thumbnail(post.getThumbnail())
+//                    .isLike(false)
+//                    .like_num(0)
+//                    .comment_num(0)
+//                    .content(post.getContent())
+//                    .build());
+//        }
+//
+//        return ResponseMessage.success(responseList);
+//    }
 
     @Transactional(readOnly = true)
     public ResponseMessage<?> getPostPerPage(Pageable pageable){

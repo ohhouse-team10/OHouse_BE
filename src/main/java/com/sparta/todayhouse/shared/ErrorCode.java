@@ -26,6 +26,7 @@ public enum ErrorCode {
     INVALID_TOKEN("INVALID_TOKEN","잘못된 JWT 토큰입니다."),
 
     //Post(게시글) 관련 오류
+    FILE_NOT_FOUND("FILE_NOT_FOUND", "파일을 찾을 수 없습니다."),
     POST_NOT_FOUND("POST_NOT_FOUND", "게시글을 찾을 수 없습니다."),
 
     //Comment(댓글) 관련 오류
