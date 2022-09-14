@@ -47,6 +47,10 @@ public class Member extends Timestamp {
     @JsonIgnore
     private List<Comment> comments;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<Likes> likes;
+
     @Override
     public boolean equals(Object obj) {
         Member member = (Member) obj;
