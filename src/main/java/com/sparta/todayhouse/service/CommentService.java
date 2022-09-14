@@ -37,7 +37,7 @@ public class CommentService {
                                             UserDetailsImpl userDetails) {
         Member member = userDetails.getMember();
         ResponseMessage<?> post_data = postService.isPresentPost(post_id);
-        if (!post_data.getIsSuccess()) return ResponseMessage.fail(POST_NOT_FOUND);
+        if (!post_data.getIsSuccess()) return post_data;
 
         Comment comment = Comment.builder()
                 .member(member)
@@ -52,7 +52,7 @@ public class CommentService {
     @Transactional(readOnly = true)
     public ResponseMessage<?> getCommentByPost(Long post_id) {
         ResponseMessage<?> post_data = postService.isPresentPost(post_id);
-        if (!post_data.getIsSuccess()) return ResponseMessage.fail(POST_NOT_FOUND);
+        if (!post_data.getIsSuccess()) return post_data;
         Post post = (Post) post_data.getData();
 
         List<CommentResponseDto> responseList = new ArrayList<>();
