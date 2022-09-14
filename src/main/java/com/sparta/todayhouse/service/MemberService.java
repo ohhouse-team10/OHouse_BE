@@ -88,11 +88,9 @@ public class MemberService {
      //로그아웃
     @Transactional
     public ResponseMessage<?> logout(UserDetailsImpl userDetails) {
-        if(jwtUtil.deleteToken(userDetails.getMember().getEmail())){
-            return ResponseMessage.success("logout success");
-        }
+        jwtUtil.deleteToken(userDetails.getMember().getEmail());
 
-        return ResponseMessage.fail(TOKEN_NOT_FOUND);
+        return ResponseMessage.success("logout success");
     }
 
 

@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 
 @Component                              //빈 객체에 등록해놓는 특정 annotation @Service 같은, 메모리 아끼는
 @RequiredArgsConstructor
@@ -76,12 +77,11 @@ public class JwtUtil {                   // JWT를 생성,검증하는 역할
         return token;
     }
 
-    public Boolean deleteToken(String email){
-        RefreshToken refreshToken =refreshTokenRepository.findByEmail(email).orElse(null);
-        if(null == refreshToken) return false;
-
-        refreshTokenRepository.delete(refreshToken);
-        return true;
+    public void deleteToken(String email){
+        List<RefreshToken> refreshTokens = refreshTokenRepository.findAllByEmail(email);
+        for(RefreshToken refreshToken : refreshTokens){
+            refreshTokenRepository.delete(refreshToken);
+        }
     }
 
 
