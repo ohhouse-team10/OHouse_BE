@@ -2,7 +2,6 @@ package com.sparta.todayhouse.controller;
 
 import com.sparta.todayhouse.dto.ResponseMessage;
 import com.sparta.todayhouse.dto.request.CommentRequestDto;
-import com.sparta.todayhouse.entity.Comment;
 import com.sparta.todayhouse.service.CommentService;
 import com.sparta.todayhouse.shared.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;

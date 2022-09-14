@@ -38,6 +38,10 @@ public class Post extends Timestamp{
     @JsonIgnore
     private List<Comment> comments;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<Likes> likes;
+
     public void update(PostRequestDto requestDto){
         this.content = requestDto.getContent();
     }

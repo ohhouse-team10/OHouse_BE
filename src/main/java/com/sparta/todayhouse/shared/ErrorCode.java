@@ -21,6 +21,10 @@ public enum ErrorCode {
     //Comment(댓글) 관련 오류
     COMMENT_NOT_FOUND("COMMENT_NOT_FOUND", "댓글을 찾을 수 없습니다."),
 
+    //Favorite(즐겨찾기) 관련 오류
+    DUPLICATE_LIKES("DUPLICATE_LIKES", "이미 좋아요를 눌렀습니다."),
+    LIKES_NOT_FOUND("FAVORITE_NOT_FOUND", "아직 좋아요를 누르지 않았습니다."),
+
     //권한 관련 오류
     NOT_AUTHORIZED("NOT_AUTHORIZED", "권한이 없습니다.");
 
