@@ -24,7 +24,8 @@ public class CommentController {
     @RequestMapping(value = "/comment/{post_id}", method = RequestMethod.GET)
     public ResponseEntity<?> getCommentByPost(@PathVariable Long post_id,
                                            @AuthenticationPrincipal UserDetailsImpl userDetails){
-        ResponseMessage<?> data = commentService.getCommentByPost(post_id);
+        ResponseMessage<?> data = (null == userDetails) ? commentService.getCommentByPost(post_id) :
+                commentService.getCommentByPost(post_id, userDetails);
         return ResponseEntity.ok().body(data);
     }
 

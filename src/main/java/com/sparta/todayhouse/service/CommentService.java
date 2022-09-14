@@ -73,6 +73,35 @@ public class CommentService {
         return ResponseMessage.success(responseList);
     }
 
+    @Transactional(readOnly = true)
+    public ResponseMessage<?> getCommentByPost(Long post_id, UserDetailsImpl userDetails) {
+        Member member = userDetails.getMember();
+
+        ResponseMessage<?> post_data = postService.isPresentPost(post_id);
+        if (!post_data.getIsSuccess()) return post_data;
+        Post post = (Post) post_data.getData();
+
+        List<CommentResponseDto> responseList = new ArrayList<>();
+        List<Comment> comments = post.getComments();
+
+        for (Comment comment : comments) {
+            Member commentMember = comment.getMember();
+            Boolean isEditable = false;
+            if(member.equals(commentMember)) isEditable = true;
+
+            responseList.add(CommentResponseDto.builder()
+                    .comment_id(comment.getId())
+                    .profile_image(commentMember.getProfile_image())
+                    .nickname(commentMember.getNickname())
+                    .content(comment.getContent())
+                    .createdAt(comment.getCreatedAt())
+                    .isEditable(isEditable)
+                    .build());
+        }
+
+        return ResponseMessage.success(responseList);
+    }
+
     @Transactional
     public ResponseMessage<?> updateComment(Long id, CommentRequestDto requestDto,
                                             UserDetailsImpl userDetails){
