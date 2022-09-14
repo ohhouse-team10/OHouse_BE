@@ -1,23 +1,19 @@
 package com.sparta.todayhouse.jwt;
 
 import com.sparta.todayhouse.entity.RefreshToken;
-import com.sparta.todayhouse.repository.MemberRepository;
 import com.sparta.todayhouse.repository.RefreshTokenRepository;
 import com.sparta.todayhouse.shared.UserDetailsImpl;
 import com.sparta.todayhouse.shared.UserDetailsServiceImpl;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.expression.spel.ast.NullLiteral;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import javax.accessibility.AccessibleKeyBinding;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,7 +34,7 @@ public class JwtUtil {                   // JWT를 생성,검증하는 역할
     private static final String ACCESSKEY = "Authorization";
     private static final String REFRESHKEY = "refreshToken";
 
-    private static final Long ACCESS_TOKEN_TIME = 60 * 60 *1000L;
+    private static final Long ACCESS_TOKEN_TIME = 20 * 60 *1000L;
     private static final Long REFRESH_TOKEN_TIME = 3 * 60 * 60 *1000L; // 3시간
 
     @Value("${jwt.secret.key}")
@@ -94,13 +90,25 @@ public class JwtUtil {                   // JWT를 생성,검증하는 역할
     }
 
     //토큰검사
-    public Boolean tokenValidate(String token){
+    public Boolean tokenValidate(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
-        } catch (Exception e){              //예외발생하면 무조건 요기로
-            log.error(e.getMessage());
-            return false;
+        } catch (SecurityException | MalformedJwtException e) {
+            log.info("잘못된 JWT 서명입니다.");
+            throw e;
+        } catch (ExpiredJwtException e) {
+            log.info("만료된 JWT 토큰입니다.");
+            throw e;
+        } catch (UnsupportedJwtException e) {
+            log.info("지원되지 않는 JWT 토큰입니다.");
+            throw e;
+        } catch (IllegalArgumentException e) {
+            log.info("JWT 토큰이 잘못되었습니다.");
+            throw e;
+        } catch (Exception e) {
+            log.info("예기치 않은 오류입니다.");
+            throw e;
         }
     }
 
@@ -139,5 +147,4 @@ public class JwtUtil {                   // JWT를 생성,검증하는 역할
         response.addHeader(ACCESSKEY, BEARER_PREFIX + tokenDto.getAccessToken());
         response.addHeader(REFRESHKEY, tokenDto.getRefreshToken());
     }
-
 }
