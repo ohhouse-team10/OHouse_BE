@@ -46,6 +46,11 @@ public class Post extends Timestamp{
         this.content = requestDto.getContent();
     }
 
+    public void update(PostRequestDto requestDto, String imageUrl){
+        this.content = requestDto.getContent();
+        this.thumbnail = imageUrl;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(null == obj) return false;
