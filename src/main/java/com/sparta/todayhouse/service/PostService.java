@@ -54,10 +54,8 @@ public class PostService {
         List<Post> posts = postRepository.findAll();
         List<PostResponseDto> responseList = new ArrayList<>();
 
-        Boolean isLike = true;
         for(Post post : posts){
             Member member = post.getMember();
-            isLike = !isLike;
             responseList.add(PostResponseDto.builder()
                     .post_id(post.getId())
                     .profile_image(member.getProfile_image())
@@ -65,7 +63,7 @@ public class PostService {
                     .isFollow(false)
                     .statusMessage(member.getStatus_message())
                     .thumbnail(post.getThumbnail())
-                    .isLike(isLike)
+                    .isLike(false)
                     .like_num(0)
                     .comment_num(0)
                     .content(post.getContent())
@@ -76,22 +74,29 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseMessage<?> getPostPerPage(Pageable pageable){
+    public ResponseMessage<?> getPostPerPage(Pageable pageable, UserDetailsImpl userDetails){
+        Member member;
+        if(null == userDetails) member = null;
+        else member = userDetails.getMember();
+
         Page<Post> postPage = postRepository.findAll(pageable);
 
         List<Post> postList = postPage.getContent();
         List<PostResponseDto> responseList = new ArrayList<>();
 
         for(Post post : postList){
-            Member member = post.getMember();
+            Member postMember = post.getMember();
+            Boolean isLike = false;
+            if(postMember.equals(member)) isLike = true;
+
             responseList.add(PostResponseDto.builder()
                     .post_id(post.getId())
-                    .profile_image(member.getProfile_image())
-                    .nickname(member.getNickname())
+                    .profile_image(postMember.getProfile_image())
+                    .nickname(postMember.getNickname())
                     .isFollow(false)
-                    .statusMessage(member.getStatus_message())
+                    .statusMessage(postMember.getStatus_message())
                     .thumbnail(post.getThumbnail())
-                    .isLike(false)
+                    .isLike(isLike)
                     .like_num(0)
                     .comment_num(0)
                     .content(post.getContent())
