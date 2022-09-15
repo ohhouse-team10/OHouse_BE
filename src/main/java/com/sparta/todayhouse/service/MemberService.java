@@ -1,6 +1,7 @@
 package com.sparta.todayhouse.service;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.todayhouse.dto.ResponseMessage;
 import com.sparta.todayhouse.dto.request.LoginRequestDto;
 import com.sparta.todayhouse.dto.request.MemberRequestDto;
@@ -127,9 +128,5 @@ public class MemberService {
 //        memberRepository.delete(member);
 //        return ResponseMessage.success("delete success");
     }
-
-
-
-
 
 }

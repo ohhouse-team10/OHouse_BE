@@ -34,7 +34,7 @@ public class JwtUtil {                   // JWT를 생성,검증하는 역할
     private static final String ACCESSKEY = "Authorization";
     private static final String REFRESHKEY = "refreshToken";
 
-    private static final Long ACCESS_TOKEN_TIME = 20 * 60 *1000L;
+    private static final Long ACCESS_TOKEN_TIME = 20 *1000L;
     private static final Long REFRESH_TOKEN_TIME = 3 * 60 * 60 *1000L; // 3시간
 
     @Value("${jwt.secret.key}")
@@ -75,9 +75,7 @@ public class JwtUtil {                   // JWT를 생성,검증하는 역할
 
     public void deleteToken(String email){
         List<RefreshToken> refreshTokens = refreshTokenRepository.findAllByEmail(email);
-        for(RefreshToken refreshToken : refreshTokens){
-            refreshTokenRepository.delete(refreshToken);
-        }
+        refreshTokenRepository.deleteAll(refreshTokens);
     }
 
 
