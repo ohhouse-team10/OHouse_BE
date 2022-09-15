@@ -26,11 +26,11 @@ public class PostController {
         return ResponseEntity.ok().body(data);
     }
 
-//    @RequestMapping(value = "/post/all", method = RequestMethod.GET)
-//    public ResponseEntity<?> getAllPost(){
-//        ResponseMessage<?> data = postService.getAllPost();
-//        return ResponseEntity.ok().body(data);
-//    }
+    @RequestMapping(value = "/post/main", method = RequestMethod.GET)
+    public ResponseEntity<?> getPostMain(){
+        ResponseMessage<?> data = postService.getPostMain();
+        return ResponseEntity.ok().body(data);
+    }
 
 
     @RequestMapping(value = "/post", method = RequestMethod.GET)                     //이중맵핑, 클래스매핑
