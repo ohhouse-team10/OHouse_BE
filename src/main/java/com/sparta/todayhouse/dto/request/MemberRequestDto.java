@@ -11,7 +11,5 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class MemberRequestDto {
     private String nickname;
-    private String profile_image;
     private String status_message;
-
 }

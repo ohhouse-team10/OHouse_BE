@@ -64,10 +64,10 @@ public class Member extends Timestamp {
         return passswordEncoder.matches(password, this.password);
     }
 
-    public void updateMember(MemberRequestDto requestDto){            //jpa 영속성
+    public void updateMember(MemberRequestDto requestDto, String... profile_image){            //jpa 영속성
         this.nickname = requestDto.getNickname();
-        this.profile_image = requestDto.getProfile_image();
         this.status_message = requestDto.getStatus_message();
+        this.profile_image = profile_image.length > 0 ? profile_image[0] : this.profile_image;
     }
 
 }

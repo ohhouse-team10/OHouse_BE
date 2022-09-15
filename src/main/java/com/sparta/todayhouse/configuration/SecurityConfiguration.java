@@ -59,8 +59,7 @@ public class SecurityConfiguration {
 
                 //CustomFilter 적용(ex. jwtFilter)
                 .and()
-////                .addFilterBefore()
-                .addFilterAfter(new JwtFilter(jwtUtil), LogoutFilter.class);      //진경님한테 질문
+                .addFilterAfter(new JwtFilter(jwtUtil), LogoutFilter.class);
 
         return http.build();
     }
