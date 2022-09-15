@@ -63,7 +63,7 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public ResponseMessage<?> getPostMain(){
-        ResponseMessage<?> post_data = isPresentPost(41L);
+        ResponseMessage<?> post_data = isPresentPost(1L);
         if(!post_data.getIsSuccess()) return post_data;
 
         Post post = (Post) post_data.getData();
@@ -156,6 +156,8 @@ public class PostService {
 
         Post post = (Post) post_data.getData();
         Member member = post.getMember();
+        post.plusViews();
+
         return ResponseMessage.success(PostDetailResponseDto.builder()
                 .style(post.getStyle())
                 .type(post.getType())

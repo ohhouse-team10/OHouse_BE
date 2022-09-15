@@ -63,8 +63,7 @@ public class MemberService {
     @Transactional
     public ResponseMessage<?> login(LoginRequestDto requestDto, HttpServletResponse response) {
         ResponseMessage<?> data = isPresentMember(requestDto.getEmail());
-
-        if(!data.getIsSuccess()) return ResponseMessage.fail(MEMBER_NOT_FOUND);
+        if(!data.getIsSuccess()) return data;
 
         Member member = (Member)data.getData();
         if (!member.validatePassword(passwordEncoder, requestDto.getPassword())) {
@@ -104,7 +103,6 @@ public class MemberService {
         if(!member_data.getIsSuccess()) return member_data;
         member = (Member) member_data.getData();
 
-//        if(null == multipartFile) member.updateMember(requestDto);
         if(null == multipartFile) member.updateMember(requestDto);
         else {
             ResponseMessage<?> image_data = imageUploader.uploadFile(multipartFile);
