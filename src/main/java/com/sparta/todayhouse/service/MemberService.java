@@ -1,14 +1,11 @@
 package com.sparta.todayhouse.service;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.todayhouse.dto.ResponseMessage;
 import com.sparta.todayhouse.dto.request.LoginRequestDto;
 import com.sparta.todayhouse.dto.request.MemberRequestDto;
 import com.sparta.todayhouse.dto.request.SignupRequestDto;
-import com.sparta.todayhouse.dto.response.LoginResponseDto;
+import com.sparta.todayhouse.dto.response.MemberResponseDto;
 import com.sparta.todayhouse.entity.Member;
-import com.sparta.todayhouse.entity.Post;
 import com.sparta.todayhouse.jwt.JwtUtil;
 import com.sparta.todayhouse.jwt.TokenDto;
 import com.sparta.todayhouse.repository.MemberRepository;
@@ -18,11 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.Id;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
 import static com.sparta.todayhouse.shared.ErrorCode.*;
 
@@ -31,9 +26,11 @@ import static com.sparta.todayhouse.shared.ErrorCode.*;
 @Service
 public class MemberService {
 
-    private final MemberRepository memberRepository;      //
+    private final String default_image = "3d8a0bd9-de30-49ae-bf47-9e1d5f38571f-profile_placeholder.png";
+    private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
+    private final AwsS3Service imageUploader;
 
     @Transactional(readOnly = true)
     public ResponseMessage<?> isPresentMember(String email) {
@@ -54,19 +51,11 @@ public class MemberService {
                 .nickname(requestDto.getNickname())
                 .password(passwordEncoder.encode(requestDto.getPassword()))
                 .role(Role.USER)
-                .profile_image("")
+                .profile_image(default_image)
                 .status_message("")
                 .build();
 
         memberRepository.save(member);
-//        return ResponseDto.success(
-//                MemberResponseDto.builder()
-//                        .id(member.getId())
-//                        .email(member.getEmail())
-//                        .nickname(member.getNickname())
-//                        .createdAt(member.getCreatedAt())
-//                        .updatedAt(member.getUpdatedAt())
-//                        .build()
         return ResponseMessage.success("signup success");
     }
 
@@ -85,9 +74,13 @@ public class MemberService {
         TokenDto tokenDto = jwtUtil.createAllToken(member.getEmail());
         jwtUtil.tokenToHeaders(tokenDto, response);
 
-        return ResponseMessage.success(LoginResponseDto.builder()
+        return ResponseMessage.success(MemberResponseDto.builder()
+                .id(member.getId())
+                .email(member.getEmail())
+                .role(member.getRole())
                 .nickname(member.getNickname())
                 .profile_image(member.getProfile_image())
+                .status_message(member.getStatus_message())
                 .build());
     }
 
@@ -102,11 +95,23 @@ public class MemberService {
 
     //회원정보수정
     @Transactional
-    public ResponseMessage<?> updateMember(MemberRequestDto requestDto, UserDetailsImpl userDetails){
-
+    public ResponseMessage<?> updateMember(MemberRequestDto requestDto,
+                                           MultipartFile multipartFile,
+                                           UserDetailsImpl userDetails){
         Member member = userDetails.getMember();
-        member.updateMember(requestDto);
-        memberRepository.save(member);
+
+        ResponseMessage<?> member_data = isPresentMember(member.getEmail());
+        if(!member_data.getIsSuccess()) return member_data;
+        member = (Member) member_data.getData();
+
+        if(null == multipartFile) member.updateMember(requestDto);
+        else {
+            ResponseMessage<?> image_data = imageUploader.uploadFile(multipartFile);
+            if(!image_data.getIsSuccess()) return image_data;
+
+            String imageUrl = (String) image_data.getData();
+            member.updateMember(requestDto, imageUrl);
+        }
         return ResponseMessage.success("edit success");
     }
 
@@ -120,13 +125,6 @@ public class MemberService {
 
         memberRepository.delete(member);
         return ResponseMessage.success("delete success");
-
-//        Optional<Member> member = memberRepository.findById(id);
-//        memberRepository.deleteByMember(member);
-
-//        Member member = memberRepository.findById(id);
-//        memberRepository.delete(member);
-//        return ResponseMessage.success("delete success");
     }
 
 }
