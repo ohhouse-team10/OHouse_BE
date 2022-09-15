@@ -73,7 +73,7 @@ public class MemberService {
 
         TokenDto tokenDto = jwtUtil.createAllToken(member.getEmail());
         jwtUtil.tokenToHeaders(tokenDto, response);
-
+        //반환값 수정
         return ResponseMessage.success(MemberResponseDto.builder()
                 .id(member.getId())
                 .email(member.getEmail())
