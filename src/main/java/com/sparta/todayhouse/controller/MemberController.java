@@ -4,6 +4,8 @@ import com.sparta.todayhouse.dto.ResponseMessage;
 import com.sparta.todayhouse.dto.request.LoginRequestDto;
 import com.sparta.todayhouse.dto.request.MemberRequestDto;
 import com.sparta.todayhouse.dto.request.SignupRequestDto;
+import com.sparta.todayhouse.entity.Member;
+import com.sparta.todayhouse.repository.MemberRepository;
 import com.sparta.todayhouse.service.MemberService;
 import com.sparta.todayhouse.shared.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -47,10 +49,17 @@ public class MemberController {
         return ResponseEntity.ok().body(data);
 
     }
+
+    //회원탈퇴
+    @RequestMapping(value = "/auth/member/delete/{email}", method = RequestMethod.DELETE)
+    public  ResponseEntity<?> deleteMember(@PathVariable String email,@AuthenticationPrincipal UserDetailsImpl userDetails){
+        ResponseMessage<?> data = memberService.deleteMember(email, userDetails);
+        return ResponseEntity.ok().body(data);
+    }
 }
 
 
-    //회원정보요청
+
 
 
 

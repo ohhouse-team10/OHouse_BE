@@ -1,11 +1,13 @@
 package com.sparta.todayhouse.service;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.sparta.todayhouse.dto.ResponseMessage;
 import com.sparta.todayhouse.dto.request.LoginRequestDto;
 import com.sparta.todayhouse.dto.request.MemberRequestDto;
 import com.sparta.todayhouse.dto.request.SignupRequestDto;
 import com.sparta.todayhouse.dto.response.LoginResponseDto;
 import com.sparta.todayhouse.entity.Member;
+import com.sparta.todayhouse.entity.Post;
 import com.sparta.todayhouse.jwt.JwtUtil;
 import com.sparta.todayhouse.jwt.TokenDto;
 import com.sparta.todayhouse.repository.MemberRepository;
@@ -16,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.Id;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
@@ -96,7 +99,7 @@ public class MemberService {
     }
 
 
-    //회원정보수정    memberrequestdto로 받아서
+    //회원정보수정
     @Transactional
     public ResponseMessage<?> updateMember(MemberRequestDto requestDto, UserDetailsImpl userDetails){
 
@@ -106,9 +109,27 @@ public class MemberService {
         return ResponseMessage.success("edit success");
     }
 
+    //회원탈퇴 로그인되어있는 id를 repository에서 delete
+    @Transactional
+    public ResponseMessage<?> deleteMember(String email, UserDetailsImpl userDetails){
+        ResponseMessage<?> response = isPresentMember(email);
+        if(!response.getIsSuccess()) return response;
+
+        Member member = userDetails.getMember();
+
+        memberRepository.delete(member);
+        return ResponseMessage.success("delete success");
+
+//        Optional<Member> member = memberRepository.findById(id);
+//        memberRepository.deleteByMember(member);
+
+//        Member member = memberRepository.findById(id);
+//        memberRepository.delete(member);
+//        return ResponseMessage.success("delete success");
+    }
 
 
 
-    //회원탈퇴
-    //회원정보요청
+
+
 }
