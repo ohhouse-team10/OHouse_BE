@@ -7,6 +7,7 @@ import com.sparta.todayhouse.dto.request.SignupRequestDto;
 import com.sparta.todayhouse.entity.Member;
 import com.sparta.todayhouse.repository.MemberRepository;
 import com.sparta.todayhouse.service.MemberService;
+import com.sparta.todayhouse.shared.ErrorHandler;
 import com.sparta.todayhouse.shared.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,26 +29,19 @@ public class MemberController {
     @RequestMapping(value="/member/signup",method= RequestMethod.POST)
     public ResponseEntity<?> signup(@RequestBody @Valid SignupRequestDto requestDto){
         ResponseMessage<?> data = memberService.signup(requestDto);
-
-        if(data.getIsSuccess()) return ResponseEntity.ok().body(data);
-        else{
-            //error 종류에 따라서 구분
-//            if(data.getCode() == DUPLICATE_EMAIL.getCode())
-            return ResponseEntity.internalServerError().body(data);
-        }
+        return ErrorHandler.returnResponse(data);
     }
 
     @RequestMapping(value = "/member/login", method = RequestMethod.POST)
     public ResponseEntity<?> login(@RequestBody @Valid LoginRequestDto requestDto, HttpServletResponse response){
         ResponseMessage<?> data = memberService.login(requestDto, response);
-        return ResponseEntity.ok().body(data);
+        return ErrorHandler.returnResponse(data);
     }
 
     @RequestMapping(value ="/auth/member/logout", method = RequestMethod.DELETE)
     public ResponseEntity<?> logout(@AuthenticationPrincipal UserDetailsImpl userDetails){
         ResponseMessage<?> data = memberService.logout(userDetails);
-
-        return ResponseEntity.ok().body(data);
+        return ErrorHandler.returnResponse(data);
     }
 
 
@@ -57,15 +51,14 @@ public class MemberController {
                                           @RequestPart(value = "file", required = false) MultipartFile multipartFile,
                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
         ResponseMessage<?> data = memberService.updateMember(requestDto, multipartFile, userDetails);
-        return ResponseEntity.ok().body(data);
-
+        return ErrorHandler.returnResponse(data);
     }
 
     //회원탈퇴
     @RequestMapping(value = "/auth/member/delete/{email}", method = RequestMethod.DELETE)
     public  ResponseEntity<?> deleteMember(@PathVariable String email,@AuthenticationPrincipal UserDetailsImpl userDetails){
         ResponseMessage<?> data = memberService.deleteMember(email, userDetails);
-        return ResponseEntity.ok().body(data);
+        return ErrorHandler.returnResponse(data);
     }
 }
 

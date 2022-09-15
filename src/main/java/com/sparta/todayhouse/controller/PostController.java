@@ -5,6 +5,7 @@ import com.sparta.todayhouse.dto.ResponseMessage;
 import com.sparta.todayhouse.dto.request.PostRequestDto;
 import com.sparta.todayhouse.service.AwsS3Service;
 import com.sparta.todayhouse.service.PostService;
+import com.sparta.todayhouse.shared.ErrorHandler;
 import com.sparta.todayhouse.shared.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -23,13 +24,13 @@ public class PostController {
                                         @RequestPart(value = "file") MultipartFile multipartFile,
                                         @AuthenticationPrincipal UserDetailsImpl userDetails){
         ResponseMessage<?> data = postService.createPost(requestDto, multipartFile, userDetails);
-        return ResponseEntity.ok().body(data);
+        return ErrorHandler.returnResponse(data);
     }
 
     @RequestMapping(value = "/post/main", method = RequestMethod.GET)
     public ResponseEntity<?> getPostMain(){
         ResponseMessage<?> data = postService.getPostMain();
-        return ResponseEntity.ok().body(data);
+        return ErrorHandler.returnResponse(data);
     }
 
 
@@ -37,14 +38,14 @@ public class PostController {
     public ResponseEntity<?> getPostPerPage(Pageable pageable, @AuthenticationPrincipal UserDetailsImpl userDetails){
         ResponseMessage<?> data = (null == userDetails) ? postService.getPostPerPage(pageable) :
                 postService.getPostPerPage(pageable, userDetails);
-        return ResponseEntity.ok().body(data);
+        return ErrorHandler.returnResponse(data);
     }
 
     @RequestMapping(value = "/post/{post_id}", method = RequestMethod.GET)
     public ResponseEntity<?> getPostDetail(@PathVariable Long post_id, @AuthenticationPrincipal UserDetailsImpl userDetails){
         ResponseMessage<?> data = (null == userDetails) ? postService.getPostDetail(post_id) :
                 postService.getPostDetail(post_id, userDetails);
-        return ResponseEntity.ok().body(data);
+        return ErrorHandler.returnResponse(data);
     }
 
     @RequestMapping(value = "/auth/post/{post_id}", method = RequestMethod.PUT)
@@ -53,13 +54,13 @@ public class PostController {
                                         @RequestPart(value = "file", required = false) MultipartFile multipartFile,
                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         ResponseMessage<?> data = postService.updatePost(post_id, requestDto, multipartFile, userDetails);
-        return ResponseEntity.ok().body(data);
+        return ErrorHandler.returnResponse(data);
     }
 
     @RequestMapping(value = "/auth/post/{post_id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deletePost(@PathVariable Long post_id,
                                         @AuthenticationPrincipal UserDetailsImpl userDetails){
         ResponseMessage<?> data = postService.deletePost(post_id, userDetails);
-        return ResponseEntity.ok().body(data);
+        return ErrorHandler.returnResponse(data);
     }
 }

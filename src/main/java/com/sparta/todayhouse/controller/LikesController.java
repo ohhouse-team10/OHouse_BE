@@ -2,6 +2,7 @@ package com.sparta.todayhouse.controller;
 
 import com.sparta.todayhouse.dto.ResponseMessage;
 import com.sparta.todayhouse.service.LikesService;
+import com.sparta.todayhouse.shared.ErrorHandler;
 import com.sparta.todayhouse.shared.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +21,13 @@ public class LikesController {
     public ResponseEntity<?> createLikes(@PathVariable Long post_id,
                                             @AuthenticationPrincipal UserDetailsImpl userDetails){
         ResponseMessage<?> data = likesService.createLikes(post_id, userDetails);
-        return ResponseEntity.ok().body(data);
+        return ErrorHandler.returnResponse(data);
     }
 
     @RequestMapping(value = "/auth/likes/{post_id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteLikes(@PathVariable Long post_id,
                                             @AuthenticationPrincipal UserDetailsImpl userDetails){
         ResponseMessage<?> data = likesService.deleteLikes(post_id, userDetails);
-        return ResponseEntity.ok().body(data);
+        return ErrorHandler.returnResponse(data);
     }
 }

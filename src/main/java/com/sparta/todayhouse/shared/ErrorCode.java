@@ -42,7 +42,6 @@ public enum ErrorCode {
     //이미지 업로드 관련 오류
     FAIL_TO_UPLOAD("FAIL_TO_UPLOAD", "이미지 업로드에 실패하였습니다.");
 
-
     private final String code;
     private final String message;
 }
