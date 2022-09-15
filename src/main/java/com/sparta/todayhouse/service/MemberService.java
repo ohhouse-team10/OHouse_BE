@@ -26,7 +26,7 @@ import static com.sparta.todayhouse.error.ErrorCode.*;
 @Service
 public class MemberService {
 
-    private final String default_image = "3d8a0bd9-de30-49ae-bf47-9e1d5f38571f-profile_placeholder.png";
+    private final String default_image = "https://ohousebucket.s3.ap-northeast-2.amazonaws.com/3d8a0bd9-de30-49ae-bf47-9e1d5f38571f-profile_placeholder.png";
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
