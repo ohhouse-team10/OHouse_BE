@@ -3,6 +3,7 @@ package com.sparta.todayhouse.service;
 import com.sparta.todayhouse.dto.ResponseMessage;
 import com.sparta.todayhouse.dto.request.PostRequestDto;
 import com.sparta.todayhouse.dto.response.PostDetailResponseDto;
+import com.sparta.todayhouse.dto.response.PostMainResponseDto;
 import com.sparta.todayhouse.dto.response.PostResponseDto;
 import com.sparta.todayhouse.entity.Likes;
 import com.sparta.todayhouse.entity.Member;
@@ -60,10 +61,20 @@ public class PostService {
         return ResponseMessage.success("post success");
     }
 
-//    @Transactional(readOnly = true)
-//    public ResponseMessage<?> getPostMain(){
-//        Post post = postRepository.
-//    }
+    @Transactional(readOnly = true)
+    public ResponseMessage<?> getPostMain(){
+        ResponseMessage<?> post_data = isPresentPost(41L);
+        if(!post_data.getIsSuccess()) return post_data;
+
+        Post post = (Post) post_data.getData();
+        Member member = post.getMember();
+        return ResponseMessage.success(PostMainResponseDto.builder()
+                .post_id(post.getId())
+                .profile_image(member.getProfile_image())
+                .nickname(member.getNickname())
+                .thumbnail(post.getThumbnail())
+                .build());
+    }
 
     @Transactional(readOnly = true)
     public ResponseMessage<?> getPostPerPage(Pageable pageable){
