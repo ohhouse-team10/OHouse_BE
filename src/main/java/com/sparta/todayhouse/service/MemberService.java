@@ -112,7 +112,17 @@ public class MemberService {
             String imageUrl = (String) image_data.getData();
             member.updateMember(requestDto, imageUrl);
         }
-        return ResponseMessage.success("edit success");
+        return ResponseMessage.success(MemberResponseDto.builder()
+                .id(member.getId())
+                .email(member.getEmail())
+                .role(member.getRole())
+                .nickname(member.getNickname())
+                .profile_image(member.getProfile_image())
+                .status_message(member.getStatus_message())
+                .build());
+
+
+
     }
 
     //회원탈퇴 로그인되어있는 id를 repository에서 delete

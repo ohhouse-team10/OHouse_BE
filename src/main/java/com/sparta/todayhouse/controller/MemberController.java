@@ -32,6 +32,7 @@ public class MemberController {
         if(data.getIsSuccess()) return ResponseEntity.ok().body(data);
         else{
             //error 종류에 따라서 구분
+//            if(data.getCode() == DUPLICATE_EMAIL.getCode())
             return ResponseEntity.internalServerError().body(data);
         }
     }
