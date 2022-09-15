@@ -60,10 +60,10 @@ public class PostService {
         return ResponseMessage.success("post success");
     }
 
-    @Transactional(readOnly = true)
-    public ResponseMessage<?> getPostMain(){
-        Post post = postRepository.
-    }
+//    @Transactional(readOnly = true)
+//    public ResponseMessage<?> getPostMain(){
+//        Post post = postRepository.
+//    }
 
     @Transactional(readOnly = true)
     public ResponseMessage<?> getPostPerPage(Pageable pageable){
