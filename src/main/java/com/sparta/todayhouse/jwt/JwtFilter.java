@@ -52,6 +52,7 @@ public class JwtFilter extends OncePerRequestFilter {
         }
         else{
             //refreshToken으로 검사하기
+            
             if(StringUtils.hasText(refreshToken)){
                 //refreshToken 유효성검사
                 //검사해서 유효하면 accessToken 새로 발급해주기
