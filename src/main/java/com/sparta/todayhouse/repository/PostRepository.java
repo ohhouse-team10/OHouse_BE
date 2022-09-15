@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
     Optional<Post> findById(Long id);
-    Optional<Post> findFirstByOrderBy
+//    Optional<Post> findFirstByOrderBy
 
     List<Post> findFirst6ByIdGreaterThan(Long id);
 
