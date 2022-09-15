@@ -1,4 +1,4 @@
-package com.sparta.todayhouse.shared;
+package com.sparta.todayhouse.error;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;

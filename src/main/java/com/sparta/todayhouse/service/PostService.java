@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.sparta.todayhouse.shared.ErrorCode.*;
+import static com.sparta.todayhouse.error.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor

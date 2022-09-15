@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
-import static com.sparta.todayhouse.shared.ErrorCode.FAIL_TO_UPLOAD;
+import static com.sparta.todayhouse.error.ErrorCode.FAIL_TO_UPLOAD;
 
 @RequiredArgsConstructor
 @Service

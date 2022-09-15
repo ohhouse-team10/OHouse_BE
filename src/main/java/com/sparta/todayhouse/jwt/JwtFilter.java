@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.sparta.todayhouse.shared.ErrorCode.*;
+import static com.sparta.todayhouse.error.ErrorCode.*;
 
 @Slf4j
 @Component

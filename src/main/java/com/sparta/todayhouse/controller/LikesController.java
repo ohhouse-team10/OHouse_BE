@@ -2,7 +2,7 @@ package com.sparta.todayhouse.controller;
 
 import com.sparta.todayhouse.dto.ResponseMessage;
 import com.sparta.todayhouse.service.LikesService;
-import com.sparta.todayhouse.shared.ErrorHandler;
+import com.sparta.todayhouse.error.ErrorHandler;
 import com.sparta.todayhouse.shared.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

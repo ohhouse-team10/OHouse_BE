@@ -2,7 +2,7 @@ package com.sparta.todayhouse.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.todayhouse.dto.ResponseMessage;
-import com.sparta.todayhouse.shared.ErrorCode;
+import com.sparta.todayhouse.error.ErrorCode;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,6 @@
 package com.sparta.todayhouse.dto;
 
-import com.sparta.todayhouse.shared.ErrorCode;
+import com.sparta.todayhouse.error.ErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

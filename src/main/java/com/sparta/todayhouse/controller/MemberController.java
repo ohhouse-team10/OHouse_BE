@@ -4,10 +4,8 @@ import com.sparta.todayhouse.dto.ResponseMessage;
 import com.sparta.todayhouse.dto.request.LoginRequestDto;
 import com.sparta.todayhouse.dto.request.MemberRequestDto;
 import com.sparta.todayhouse.dto.request.SignupRequestDto;
-import com.sparta.todayhouse.entity.Member;
-import com.sparta.todayhouse.repository.MemberRepository;
 import com.sparta.todayhouse.service.MemberService;
-import com.sparta.todayhouse.shared.ErrorHandler;
+import com.sparta.todayhouse.error.ErrorHandler;
 import com.sparta.todayhouse.shared.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
-import static com.sparta.todayhouse.shared.ErrorCode.DUPLICATE_EMAIL;
 
 @RestController
 @RequiredArgsConstructor

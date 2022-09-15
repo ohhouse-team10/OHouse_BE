@@ -1,11 +1,9 @@
 package com.sparta.todayhouse.controller;
 
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.sparta.todayhouse.dto.ResponseMessage;
 import com.sparta.todayhouse.dto.request.PostRequestDto;
-import com.sparta.todayhouse.service.AwsS3Service;
 import com.sparta.todayhouse.service.PostService;
-import com.sparta.todayhouse.shared.ErrorHandler;
+import com.sparta.todayhouse.error.ErrorHandler;
 import com.sparta.todayhouse.shared.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

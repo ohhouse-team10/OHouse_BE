@@ -10,9 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
-import static com.sparta.todayhouse.shared.ErrorCode.*;
+import static com.sparta.todayhouse.error.ErrorCode.*;
 
 @RequiredArgsConstructor
 @Service

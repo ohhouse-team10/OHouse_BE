@@ -1,4 +1,4 @@
-package com.sparta.todayhouse.shared;
+package com.sparta.todayhouse.error;
 
 import com.sparta.todayhouse.dto.ResponseMessage;
 import org.springframework.http.HttpStatus;
