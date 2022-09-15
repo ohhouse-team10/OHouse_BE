@@ -104,7 +104,8 @@ public class MemberService {
         if(!member_data.getIsSuccess()) return member_data;
         member = (Member) member_data.getData();
 
-        if(null == multipartFile) member.updateMember(requestDto);
+//        if(null == multipartFile) member.updateMember(requestDto);
+        if(null == multipartFile) return ResponseMessage.fail(FAIL_TO_UPLOAD);
         else {
             ResponseMessage<?> image_data = imageUploader.uploadFile(multipartFile);
             if(!image_data.getIsSuccess()) return image_data;
